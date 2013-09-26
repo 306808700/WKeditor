@@ -31,7 +31,6 @@
         background-color: #FFF;
         border: none;
         height: 58px;
-
     }
     #wankePost .title{
         border-bottom: 1px solid #e6e6e6;
@@ -43,8 +42,6 @@
     <div id="WKeditor"></div>
 </div>
 <script>
-    
-   
     var S = KISSY;
     S.Config.debug = true;
     if (S.Config.debug) {
@@ -62,6 +59,24 @@
                     path:"./",
                     charset:"utf-8",
                     ignorePackageNameInUri:true
+                },
+                {
+                    name:"WKfont",
+                    path:"../plugin/WKfont/WKfont",
+                    charset:"utf-8",
+                    ignorePackageNameInUri:true
+                },
+                {
+                    name:"WKimage",
+                    path:"../plugin/WKimage/WKimage",
+                    charset:"utf-8",
+                    ignorePackageNameInUri:true
+                },
+                {
+                    name:"WKvideo",
+                    path:"../plugin/WKvideo/WKvideo",
+                    charset:"utf-8",
+                    ignorePackageNameInUri:true
                 }
             ]
         });
@@ -73,10 +88,10 @@
                             1. 鼠标选中已输入文字可修改文字样式。<br>\
                             2. 支持粘帖截图。<br>\
                             3. 移动到未居中的图片上出现居中按钮。<br></div>',
-                font:[
-                    "hugeFont","largeFont","normalFont","strongFont","listText" //,"italicText"
-                ],
                 plugin:{
+                    font:[
+                        "hugeFont","largeFont","normalFont","strongFont","listText"
+                    ],
                     image:{
                         action:"upload.php"
                     },
