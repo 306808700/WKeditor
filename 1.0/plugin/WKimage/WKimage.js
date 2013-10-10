@@ -30,12 +30,12 @@ KISSY.add(function (S, Node,Base) {
     WKimage.prototype.view = function(){
         var self = this;
         self.$image = $(self.tpl.wrap);
-        self.ele.append(self.$image);
+        $("body").append(self.$image);
 
         self.view.setImagePlatePosition = function(){
             self.$image.width(self.ele.width()).show();
-            var top = ($(window).height()-self.$image.outerHeight())/2-self.top;
-            var left = ($(window).width()-self.$image.width())/2-self.left;
+            var top = ($(window).height()-self.$image.outerHeight())/2;
+            var left = ($(window).width()-self.$image.width())/2;
             if(top<0){
                 top = 5;
             }
@@ -68,7 +68,7 @@ KISSY.add(function (S, Node,Base) {
                         $(this).parent().parent().parent().remove();
                         self.tool.realign(S.one("#J_UploaderQueue"),"ani");
                         if($("#J_UploaderQueue").children().length==0){
-                            uploadRest();
+                            self.view.uploadRest();
                         }
                    // },"确定要删除这张图吗？");
 
@@ -83,17 +83,29 @@ KISSY.add(function (S, Node,Base) {
                 }
                 return template;
         }
-        self.view.pixeler = function(img,angle,callback){
+        self.view.pixeler = function(src,angle,callback){
             KISSY.use('pixeler', function(S, Pixeler) {
                 var pixeler = new Pixeler();
-                pixeler.processImage('rotate', {
-                    dataURL: img.attr("src"),
-                    angle: angle,
-                    type: 'jpeg',
-                    callback: function(dataURL) {
-                        callback(dataURL);
-                    }
-                });
+                function getCanvasUrl(src){
+                    pixeler.processImage('rotate', {
+                        dataURL: src,
+                        angle: angle,
+                        type: 'jpeg',
+                        callback: function(dataURL) {
+                            callback(dataURL);
+                        }
+                    });
+                }
+
+                if(src.name){
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+                        getCanvasUrl(e.target.result)
+                    };
+                    reader.readAsDataURL(src);
+                }else{
+                    getCanvasUrl(src)
+                }
             });
         }
         self.view.insertImage = function(ul){
@@ -112,19 +124,20 @@ KISSY.add(function (S, Node,Base) {
             self.$insertArea.remove();
             self.$overlay.remove();
             self.tool.setCart(lastp.one("img")[0],self.get("range"));
-        }
-        self.$insertArea = self.tool.insertArea();
-    };
-    WKimage.prototype.event = function(){
-        var self = this;
-        var btn = self.$image.one("#J_UploaderBtn");
-        function uploadRest(){
+        };
+        self.view.uploadRest = function(){
             self.$image.one(".up_btn").css({
                 width:90
             });
             $("#J_UploaderQueue").hide();
             $(".btn-confirm").hide();
         }
+        self.$insertArea = self.tool.insertArea();
+    };
+    WKimage.prototype.event = function(){
+        var self = this;
+        var btn = self.$image.one("#J_UploaderBtn");
+        
         S.use('gallery/uploader/1.4/index,gallery/uploader/1.4/themes/default/index,gallery/uploader/1.4/themes/default/style.css',function (S, Uploader,DefaultTheme) {
             
             
@@ -156,7 +169,10 @@ KISSY.add(function (S, Node,Base) {
                         multiple:multiple,
                         autoUpload:"true"
                     });
-                    
+                    if(!self.browser.msie){
+                        console.log(self.$image);
+                        self.event.html5Upload(self.$image);
+                    }
                     
                     var addFileBtn = self.$image.one(".ks-uploader-button");
                     
@@ -205,6 +221,7 @@ KISSY.add(function (S, Node,Base) {
                         if(self.get("uploaderkey")){
                             return;
                         }
+                        self.tool.realign(S.one("#J_UploaderQueue"));
                         self.set("uploaderkey",setTimeout(function(){
                             self.tool.realign(S.one("#J_UploaderQueue"));
                             clearTimeout(self.get("uploaderkey"));
@@ -235,7 +252,7 @@ KISSY.add(function (S, Node,Base) {
                         self.tool.realign(S.one("#J_UploaderQueue"));
                         if(S.one("#J_UploaderQueue").children(".queue-file").length==0){
 
-                            uploadRest();
+                            self.view.uploadRest();
                         }
                         
                     });
@@ -258,6 +275,81 @@ KISSY.add(function (S, Node,Base) {
             self.$wrap.one(".insertArea").remove();
             self.$wrap.fire("blur");
         });
+        /* 让支持html5的浏览器支持此功能 */
+        self.event.html5Upload = function(dom){
+            var box = dom.one(".uploadBox")[0];
+            document.addEventListener("dragenter", function(e){  
+                box.style.backgroundColor = '#fff';  
+            }, false);  
+            document.addEventListener("dragleave", function(e){  
+                box.style.borderColor = '#999';  
+            }, false);  
+            box.addEventListener("dragenter", function(e){  
+                box.style.borderColor = '#999';  
+                box.style.backgroundColor = 'transparent';  
+            }, false);  
+            box.addEventListener("dragleave", function(e){  
+                box.style.backgroundColor = '#fff';  
+            }, false);
+            box.addEventListener("dragover", function(e){  
+                e.stopPropagation();  
+                e.preventDefault();
+                box.style.borderColor = '#999';  
+                box.style.backgroundColor = '#f4ffa8';  
+            }, false);  
+            box.addEventListener("drop", function(e){
+                box.style.backgroundColor = 'transparent';
+                box.style.borderColor = '#999';
+                e.stopPropagation();  
+                e.preventDefault();
+                var files = e.dataTransfer.files;
+                for(var i=0;i<files.length;i++){
+                    var file = files[i];
+                    var img = document.createElement("img");
+                    img.file = file;
+                    
+                    var testFile = {
+                        'name':file.name,
+                        'size':file.size,
+                        'type':file.type,
+                        status: "waiting",
+                        textSize: file.size/1024+"kB"
+                    };
+                    //var queue = _class._default.uploader.get('queue');
+                   // var testFile = queue.add(testFile);
+                    //    testFile.data = file;
+                    
+                    //_class._default.uploader.fire("select",{file:[testFile]});
+
+                    var $li = $("<li class='queue-file'></li>");
+                    $li.append(self.view.preview({
+                        url:"",
+                        resize_url:"",
+                        width:0,
+                        height:0
+                    }));
+
+                    $li.one(".pic").html("").append(img);
+                    
+                    S.one("#J_UploaderQueue").append($li);
+                    var reader = new FileReader();  
+                    reader.onload = (function(aImg) { 
+                        return function(e) {
+                            aImg.src = e.target.result;
+                            
+                        }; 
+                    })(img);
+                    reader.readAsDataURL(file);
+                }
+                $("#J_UploaderQueue").show();
+                $(".btn-confirm").show();
+                self.$image.one(".up_btn").css({
+                    width:205
+                });
+                self.tool.realign(S.one("#J_UploaderQueue"));
+                self.tool.dragSort(self);
+            }, false);
+        };
         self.event.rotate = function(dom,type){
             dom.on("click",function(){
                 var parent = $(this).parent();
@@ -265,12 +357,14 @@ KISSY.add(function (S, Node,Base) {
                 var angle = type=="left"?270:90;
                 //_class.plugin.rotate(li.one("img")[0],angle);
                 parent.hide();
-                self.view.pixeler(li.one("img"),angle,function(url){
+                self.view.pixeler(li.one("img")[0].fileValue || li.one("img").attr("src"),angle,function(url){
                     li.one("img").attr('src',url);
-                    li.attr("angle",-angle);
+                    if(li.one("img")[0].fileValue){
+                        delete li.one("img")[0].fileValue;
+                    }
                 });
             });
-        },
+        };
         self.event.drag = function(){
             $("#J_UploaderQueue").all(".queue-file").drag(
                 function(e){
@@ -332,7 +426,7 @@ KISSY.add(function (S, Node,Base) {
                     self.event.dragDown = false;
                 }
             );
-        }
+        };
         $(window).on("resize",function(){
             self.view.setImagePlatePosition();
             self.tool.realign($("#J_UploaderQueue"));

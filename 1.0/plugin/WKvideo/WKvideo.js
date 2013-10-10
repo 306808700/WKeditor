@@ -26,7 +26,7 @@ KISSY.add(function (S, Node,Base) {
     WKvideo.prototype.view = function(){
         var self = this;
         self.$video = $(self.tpl.wrap);
-        self.ele.append(self.$video);
+        $("body").append(self.$video);
 
         self.view.setVideoPlatePosition = function(){
             self.$video.width(self.ele.width()).show();
@@ -37,8 +37,8 @@ KISSY.add(function (S, Node,Base) {
             }
             self.$video.css({
                 zIndex:100,
-                left:left-self.left,
-                top:top-self.top
+                left:left,
+                top:top
             });
         }
         self.view.setVideoPlatePosition();
@@ -87,6 +87,8 @@ KISSY.add(function (S, Node,Base) {
         self.$video.one(".close").on("click",function(){
             self.$video.remove();
             self.$overlay.remove();
+            self.$insertArea.remove();
+            self.$wrap.fire("blur");
         });
     };
     S.extend(WKvideo, Base, /** @lends WKeditor.prototype*/{

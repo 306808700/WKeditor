@@ -52,6 +52,19 @@ KISSY.add('WKeditor/1.0/index',function (S, Node,Base,XTemplate) {
         };
         this.view.init();
     };
+    WKeditor.prototype.plug = function(config,callback){
+        var self = this;
+        var tpl = "<button class='{{name}}' title='{{text}}'></button>";
+        var data = {};
+        for(var name in config){
+            data.name = name;
+            data.text = config[name];
+        }
+        var temp = new XTemplate(tpl).render(data);
+        self.$plugin.one(".box").append(temp);
+        self.plugin.render();
+        self[data.name] = callback;
+    };
     WKeditor.prototype.plugin = function(config){
         var self = this;
         this.plugin.tpl = {
@@ -75,7 +88,7 @@ KISSY.add('WKeditor/1.0/index',function (S, Node,Base,XTemplate) {
             var arr = [],
                 temp = "",
                 i = 0;
-
+            
             for(var name in config){
                 if(self.plugin.tpl.plugin[name]){
                     arr[i] = {
@@ -87,12 +100,11 @@ KISSY.add('WKeditor/1.0/index',function (S, Node,Base,XTemplate) {
             }
             temp = new XTemplate(self.plugin.tpl.btn).render({data:arr});
             self.$plugin.append(temp);
+            
             self.$plugin.append(self.plugin.tpl.arrow);
-            self.$plugin.height(self.$plugin.all("button").length*33);
-            self.$plugin.one(".arrow-outer").css({
-                top:(self.$plugin.height())/2-11
-            });
+            
             self.ele.append(self.$plugin);
+            self.plugin.render();
         };
 
         this.plugin.event = function(){
@@ -103,6 +115,12 @@ KISSY.add('WKeditor/1.0/index',function (S, Node,Base,XTemplate) {
                 var name = $(e.target).attr("class");
                 self[name]();
                 return false;
+            });
+        };
+        this.plugin.render = function(){
+            self.$plugin.height(self.$plugin.all("button").length*33);
+            self.$plugin.one(".arrow-outer").css({
+                top:(self.$plugin.height())/2-11
             });
         };
         this.plugin.init();
@@ -152,6 +170,7 @@ KISSY.add('WKeditor/1.0/index',function (S, Node,Base,XTemplate) {
                 if(self.browser.chrome||self.browser.mozilla){
                     self.event.shotImg(e);
                 }
+                self.tool.fliter(self.$wrap);
             };
         self.event.shotImg = function(e){
             var clipboardData = e.clipboardData;
@@ -176,18 +195,22 @@ KISSY.add('WKeditor/1.0/index',function (S, Node,Base,XTemplate) {
         self.event.showImgOp = function(el){
             var $area = self.ele;
             var img = $(el);
+            function setPosition(btn,n){
+                n = n || 0;
+                btn.css({
+                    left:img.offset().left+img.width()-33-self.left-n,
+                    top:img.offset().top-self.top,
+                    position:"absolute",
+                    display:"block"
+                });
+            }
             void function removeBtn(){
                 var button = $area.all(".removeImage");
                 if($area.all(".removeImage").length==0){
                     button = $("<button class='removeImage'></button>");
                     $area.append(button);
                 }
-                button.css({
-                    left:img.offset().left+img.width()-33,
-                    top:img.offset().top,
-                    position:"absolute",
-                    display:"block"
-                });
+                setPosition(button);
                 button.detach().on("click",function(){
                     if(img.attr("loadingid")){
                         var loadingimg = $("#editorMain").all("img[loadingid="+img.attr("loadingid")+"]");
@@ -208,12 +231,7 @@ KISSY.add('WKeditor/1.0/index',function (S, Node,Base,XTemplate) {
                     button = $("<button class='centerImage'>居中</button>");
                     $area.append(button);
                 }
-                button.css({
-                    left:img.offset().left+img.width()-33-46,
-                    top:img.offset().top,
-                    position:"absolute",
-                    display:"block"
-                });
+                setPosition(button,46);
                 button.detach("click").on("click",function(){
                     var p = $("<p style='text-align:center'></p>");
                     img.before(p);
@@ -258,27 +276,81 @@ KISSY.add('WKeditor/1.0/index',function (S, Node,Base,XTemplate) {
     };
     WKeditor.prototype.image = function(){
         var self = this;
-        KISSY.use("WKimage",function(S,WKimage){
-            var Wkimage = new WKimage(self.getAttrVals());
+        KISSY.use("WKimage,WKimage.css",function(S,WKimage){
+            self.Wkimage = new WKimage(self.getAttrVals());
         });
     };
     WKeditor.prototype.video = function(){
         var self = this;
-        KISSY.use("WKvideo",function(S,WKvideo){
+        KISSY.use("WKvideo,WKvideo.css",function(S,WKvideo){
             
-            var WKvideo = new WKvideo(self.getAttrVals());
+            self.WKvideo = new WKvideo(self.getAttrVals());
         });
     };
     WKeditor.prototype.font = function(config){
         var self = this;
-        KISSY.use("WKfont",function(S,WKfont){
+        KISSY.use("WKfont,WKfont.css",function(S,WKfont){
             self.set("config",config);
-            var WKfont = new WKfont(self.getAttrVals());
+            self.WKfont = new WKfont(self.getAttrVals());
         });
     };
     WKeditor.prototype.tool = function(){
         var self = this;
         return {
+            fliter:function(dom){
+                var FLITER_REG = self.reg.fliterReg;
+                function theNextReplace(){
+                    dom.all("*").each(function(){
+                        var name = $(this)[0].tagName;
+                        
+                        var _c = $(this).attr('class');
+
+                        $(this).removeAttr("class");
+                        $(this).removeAttr("id");
+                        $(this).removeAttr("onclick");
+                        $(this).removeAttr("onmoueover");
+                        if(_c == "wankeEditorLink"){
+                            $(this).addClass("wankeEditorLink");
+                        }
+                        if(_c == "h5-video"){
+                            $(this).addClass("h5-video");
+                        }
+                        if(name=="FONT"){
+                            $(this).removeAttr("color");
+                            $(this).removeAttr("face");
+                        }
+                        if(name=="P"){
+                            var center = $(this).css("text-align");
+                            $(this).removeAttr("style");
+                            $(this).css("text-align",center);
+                        }else{
+                            if(name!="EMBED"){
+                                $(this).removeAttr("style");
+                            }
+                        }
+                    });
+                }
+                setTimeout(function(){
+                    var len = dom.all("*").length;
+                    dom.all("*").each(function(obj,index){
+                        var name = $(this)[0].tagName;
+                        if(!S.inArray(name,FLITER_REG.split("|"))){
+                            $(this).remove();
+                        }
+                        /*
+                        if(name=="IMG"){
+                            var newImg = $(this).clone();
+                            newImg.removeAttr("setdragg");
+                            $(this).after(newImg);
+                            $(this).remove();
+                        }
+                        */
+                        if(index==len-1){
+                            theNextReplace();
+                        }
+                    });
+                },10);
+            },
             insertArea:function(){
                 var id = +new Date();
                 var $insertArea = $("<div class='insertArea' id='"+id+"'></div>");
@@ -307,23 +379,6 @@ KISSY.add('WKeditor/1.0/index',function (S, Node,Base,XTemplate) {
                             opacity:0,
                             width:parseInt($("#J_UploaderQueue").attr("space"))-6
                         });
-                        /*
-                        $("#J_UploaderQueue").all(".queue-space").on("mouseenter",function(){
-                            if(_class._default.dragDown){
-                                $(this).css({
-                                    opacity:1
-                                }).animate({
-                                    width:parseInt($(this).attr("space"))-6
-                                },1/4);
-                                _class._default.space = $(this);
-                            }
-                        }).on("mouseleave",function(){
-                            $(this).css({
-                                opacity:0
-                            });
-                            _class._default.space = null;
-                        });
-                        */
                     },
                     function(e){
                         // move
@@ -561,27 +616,28 @@ KISSY.add('WKeditor/1.0/index',function (S, Node,Base,XTemplate) {
             },
             getRange:function(){
                 var range;
-                try{
                     range = this.getSelection().createRange ? this.getSelection().createRange() : this.getSelection().getRangeAt(0);
-                    range.selectText = range.text ? range.text : range.toString();
-                }catch(e){}
+                    if(range.text){
+                        range.selectText = range.text
+                    }
+
+                    if(range.toString){
+                        range.selectText = range.toString();
+                    }
+                    
+                
                 return range;
             },
             //设置光标位置
             setCart:function(dom,range) {
-
-                try{
-                    if(document.selection&&parseInt(self.browser.version)<9){
-                        range.collapse(false);
-                        range.select();
-                    }else{
-                        range.setStartAfter(dom);
-                        range.collapse(true);
-                        this.getSelection().removeAllRanges();
-                        this.getSelection().addRange(range);
-                    }
-                }catch(e){
-
+                if(document.selection&&parseInt(self.browser.version)<9){
+                    range.collapse(false);
+                    range.select();
+                }else{
+                    range.setStartAfter(dom);
+                    range.collapse(true);
+                    this.getSelection().removeAllRanges();
+                    this.getSelection().addRange(range);
                 }
             },
             //插入到光标位置
@@ -613,6 +669,8 @@ KISSY.add('WKeditor/1.0/index',function (S, Node,Base,XTemplate) {
             this.ele = this.get("ele");
             this.set("left",this.ele.offset().left);
             this.set("top",this.ele.offset().top);
+            this.left = this.get("left");
+            this.top = this.get("top");
             this.view();
             this.event();
             if(this.get("plugin")){

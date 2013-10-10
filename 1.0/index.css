@@ -1,9 +1,10 @@
+	
 	#WKeditor{
 		min-height: 400px;
-		
 		_height:400px;
 		border-radius: 2px;
 		position: relative;
+		padding: 15px;
 	}
 	#WKeditor .message{
 		color: #aaa;
@@ -23,7 +24,7 @@
 	}
 	#WKeditor .WKeditor_wrap{
 		min-height:300px;
-		padding: 15px;
+		
 		outline: none;
 		overflow: hidden;
 		font-size: 14px;
@@ -40,8 +41,8 @@
 	}
 	.WKeditor_plugin{
 		position: fixed;
-		top: 100px;
-		margin-left: -42px;
+		top: 150px;
+		margin-left: -60px;
 		background: #333;
 		width: 27px;
 		border-radius: 2px;
@@ -71,189 +72,7 @@
 		background: url(http://img04.taobaocdn.com/tps/i4/T1.AJiFj8dXXXBqKDv-150-117.png)
 	}
 
-	.WKeditor_image_plate{
-		position: absolute;
-		background-color:#f8f8f8;
-		padding: 50px 0px 50px 0px;
-		letter-spacing: 1px;
-		font-size: 14px;
-		display: none;
-	}
-	.WKeditor_image_plate .btn-uploader{
-		position: relative;
-		width: 90px;
-		height: 45px;
-		padding: 0px;
-	}
-	.WKeditor_image_plate .file-input-wrapper{
-		display: block;
-		height: 45px;
-		width: 90px;
-		position: absolute;
-		left: 0;
-		top: 0;
-		margin: 0;
-		overflow: hidden;
-		padding: 0;
-		z-index: 300;
-	}
-	.WKeditor_image_plate .file-input-wrapper input{
-		background: none repeat scroll 0 0 transparent;
-		border: medium none;
-		cursor: pointer;
-		height: 200px;
-		width: 110px;
-		top: -50px;
-		opacity: 0;
-		position: absolute;
-		font-size: 100px;
-		left: 0;
-	}
-
-	.WKeditor_image_plate .btn-confirm ,.WKeditor_video_plate .btn-confirm{
-	    display: none;
-	    width: 90px;
-	    height: 45px;
-	    margin-left: 24px;
-	    float: left;
-	    padding: 0px;
-	}
-	.WKeditor_image_plate .strong{
-	    font-size: 14px;
-	    padding:10px;
-	    height: auto;
-	}
-	.WKeditor_image_plate .box{
-	    /*position: absolute;*/
-	    clear: both;
-	    text-align: center;
-	}
-
-	.WKeditor_image_plate .canDragMsg{
-	    position: absolute;
-	    right: 25px;
-	    top: 20px;
-	    display: none;
-	    color: #999;
-
-	}
-	.WKeditor_image_plate .uploadBox{
-	    border: 3px dashed #999;
-	    margin: 0px 20px;
-	    background: transparent;
-	    border:0px\9;
-	}
-	.WKeditor_image_plate .close{
-		position: absolute;
-		right: 5px; 
-		top: 5px; 
-		font-size: 20px; 
-		height: 20px; 
-		line-height: 20px; 
-		cursor: pointer; 
-		width: 20px;
-	}
-	#J_UploaderQueue {
-		position: relative;
-		margin-top: 0px;
-		padding: 0px;
-		width: auto;
-	}
-	#J_UploaderQueue li{
-		width: 100px;
-		height: 100px;
-		position: absolute;
-		display: table-cell;
-		vertical-align: middle;
-		text-align: center;
-		background: #fff;
-		padding: 0px;
-		list-style: none;
-	}
-	#J_UploaderQueue li .imageBox{
-	    text-align: center;
-	    vertical-align: middle;
-	    display: table-cell;
-	    width: 100px;
-	    height: 100px;
-	    background: #fff;
-	    overflow: hidden;
-	    
-	}
-	#J_UploaderQueue li .imageBox .pic{
-	    width: 100px;
-	    height: 100px;
-	    vertical-align: middle;
-	    display: table-cell;
-	}
-	#J_UploaderQueue img{
-		max-width: 100px;
-		max-height: 100px;
-		vertical-align: middle;
-	}
-	#J_UploaderQueue li.queue-space{
-	     background: none;
-	     width: 15px;
-	     border: 3px dashed #aaa;
-	     height: 96px;
-	     opacity: 0;
-	     z-index: 90;
-	}
-
-
-	.WKeditor_font_plate{
-		position: absolute;
-		display: none;
-	}
-	.WKeditor_font_plate .box{
-		border-radius: 2px;
-	    background-color: #333;
-	    height: 32px;
-	    float:left;
-	    -webkit-box-shadow: #666 0px 2px 4px;
-	    -moz-box-shadow: #666 0px 2px 4px;
-	    box-shadow: #666 0px 2px 4px;
-	}
-	.WKeditor_font_plate .command {
-		width: 32px;
-		height: 32px;
-		cursor: pointer;
-		border-radius: 2px;
-		border-right: 1px solid #2b2b2b;
-		border: 0;
-		background-color: #333;
-		display: inline-block;
-		background: url(http://img03.taobaocdn.com/tps/i3/T1zHRHXCdhXXaw4i2e-160-37.gif)
-	}
-	.WKeditor_font_plate .command:hover{
-	    background-color: #141414;
-	}
-	.WKeditor_font_plate .command.hugeFont{
-	    background-position: 0 -5px;
-	}
-	.WKeditor_font_plate .command.largeFont{
-	    background-position: -32px -5px;
-	}
-	.WKeditor_font_plate .command.normalFont{
-	    background-position: -64px -5px;
-	}
-	.WKeditor_font_plate .command.strongFont{
-	    background-position: -96px -5px;
-	}
-	.WKeditor_font_plate .command.listText{
-	    background-position: -128px -5px;
-	}
-	.WKeditor_font_plate .arrow{
-	    width:9px;
-	    height:5px;
-	    overflow: hidden;
-	    position: absolute;
-	    bottom: -5px;
-	    left:50%;
-	    margin-left:-5px;
-	    background: url(http://img03.taobaocdn.com/tps/i3/T1zHRHXCdhXXaw4i2e-160-37.gif);
-	    zoom:1;
-	}
+	
 	#WKeditor .removeImage{
 	    position: absolute;
 	    width:33px;
@@ -298,39 +117,6 @@
 		overflow:hidden; 
 		left: 26px;
 	} 
-
-	.ks-overlay {
-        position:absolute;
-        left:-9999px;
-        top:-9999px;
-    }
-    .ks-overlay-hidden {
-        visibility: hidden;
-    }
-
-    .ks-overlay-mask-hidden {
-        display: none;
-    }
-
-    .ks-overlay-shown {
-        visibility: visible;
-    }
-
-    .ks-overlay-mask-shown{
-        display: block;
-    }
-
-
-	
-	/*
-	*@ name:        玩客全站按钮样式
-	*@ author:      左御  zuoyu.ht@taobao.com
-	*@ create:      2013-07-16
-	*@ update:      2013-07-16
-	*/
-
-	/* 按钮基础样式 */
-
 	.wk-btn {
 	    display: inline-block;
 	    *display: inline;
@@ -353,21 +139,6 @@
 	    filter: alpha(opacity=80);
 	}
 
-	/* 按钮目前三种大小，small, normal和big */
-
-	.btn-small {
-	    padding: 0 15px;
-	    height: 30px;
-	    line-height: 30px;
-	    font-size: 12px;
-	}
-
-	.btn-normal {
-	    padding: 0 20px;
-	    height: 35px;
-	    line-height: 35px;
-	    font-size: 14px;
-	}
 
 	.btn-large {
 	    padding: 0 30px;
@@ -375,263 +146,6 @@
 	    line-height: 40px;
 	    font-size: 16px;
 	}
-
-	.btn-iconfont {
-	    padding-left: 15px;
-	    padding-right: 15px;
-	}
-
-	.btn-primary {
-	    background-color: #3a87ef;
-	}
-
-	.btn-low {
-	    background-color: #b3bfc0;
-	}
-
-	.btn-warning {
-	    background-color: #ff543b;
-	}
-
-	.btn-love {
-	    background-color: #ff8273;
-	}
-
-	.btn-focus {
-	    background-color: #598bdf;
-	}
-
-	.btn-special-cancel {
-	    background-color: #b3bfc0;
-	    padding-left: 11px;
-	    padding-right: 11px;
-	    cursor: default;
-	}
-
-	.btn-special-cancel:hover {
-	    opacity: 1;
-	}
-
-	.btn-special-cancel .btn-st-txt {
-	    padding-right: 5px;
-	    padding-left: 5px;
-	    border-right: 1px solid #99a3a4;
-	}
-
-	.btn-special-cancel .btn-cancel-txt {
-	    color: #fff;
-	    margin-left: 5px;
-	}
-
-	.btn-special-cancel .btn-cancel-txt:hover {
-	    color: #fff;
-	    text-decoration: underline;
-	}
-
-	.btn-none {
-	    display: none;
-	}
-
-	.wk-btn .icontext {
-	    display: inline-block;
-	    padding-left: 3px;
-	    *display: inline;
-	}
-
-	.wk-btn .focus-icon {
-	    display: inline-block;
-	    *display: inline;
-	    *zoom: 1;
-	    background: url(http://img03.taobaocdn.com/tps/i3/T1i.1kFhpfXXbwi1_X-15-60.png) no-repeat 0 0;
-	    width: 15px;
-	    height: 18px;
-	    margin-left: -1px;
-	    margin-right: 2px;
-	    vertical-align:middle;
-	}
-
-	.wk-btn .focus-done {
-	    background-position: 0 -20px;
-	}
-
-	.wk-btn .focus-each {
-	    background-position: 0 -40px;
-	}
-
-	/* 小站页发表文章，发起讨论按钮 */
-
-	.btn-publish {
-	    background-color: #ff8273;
-	    float: right;
-	}
-
-	.btn-mgr {
-	    margin-right: 10px;
-	}
-
-	/* 添加图片按钮，编辑器发表文章的提交按钮 */
-
-	.btn-picture,
-	.btn-editor {
-	    background-color: #3a87ee;
-	}
-
-	/* 回复按钮，没有输入文本时候的样式 */
-
-	.btn-unable {
-	    background-color: #999;
-	}
-
-	/* 文章详情页，短评详情页的提交按钮 */
-	.btn-submit {
-	    padding: 0;
-	    width: 90px;
-	}
-
-
-	/* 按钮背景色划分 */
-
-	.btn-bg-grey {
-	    background-color: #f0f0f0;
-	}
-
-	.btn-bg-red {
-	    background-color: #ff543b;
-	}
-
-	.btn-bg-orange {
-	    background-color: #fb8954;
-	}
-
-	.btn-bg-green {
-	    background-color: #00b98d;
-	}
-
 	.btn-bg-blue {
 	    background-color: #3a87ef;
-	}
-
-	.btn-bg-lightblue {
-	    background-color: #3a87ef;
-	}
-
-	.btn-bg-pink {
-	    background-color: #ff8273;
-	}
-
-	.WKeditor_image_plate .up_btn{
-		margin:auto;
-	    width: 90px;
-	    text-align: center;
-	    clear: both;
-	    overflow: hidden;
-	}
-	.WKeditor_image_plate p.text{
-		color: #666;
-	}
-	.WKeditor_image_plate .defaultTheme-button{
-	    filter:none;
-	    float: left;
-	    border:none;
-	    background: url(http://img03.taobaocdn.com/tps/i3/T1c_ugXt0cXXXC1Wk9-90-180.png) !important;
-	    width:90px;
-	    height: 45px;
-	    cursor:pointer;
-	    border-radius:0;
-	    margin-left:0px;
-	    margin-right:0px;
-	}
-	.WKeditor_image_plate .defaultTheme-button:hover{
-		filter:none;
-	}
-	.WKeditor_image_plate .defaultTheme-button .btn-text{
-		display: none;
-	}
-	.WKeditor_image_plate .defaultTheme-button .file-input-wrapper{
-	    filter:alpha(opacity=0);   
-	    height:50px;
-	    background:none;
-	}
-	.WKeditor_image_plate .btn-confirm{
-	    display: none;
-	    width: 90px;
-	    height: 45px;
-	    margin-left: 24px;
-	    float: left;
-	    padding: 0px;
-	}
-	.WKeditor_image_plate #J_UploaderQueue li .imageBox .operate{
-	    display: none;
-	    bottom: 0px;
-	    right: 0px;
-	    position: absolute;
-	}
-	.WKeditor_image_plate .rotate,.rotatel{
-	    background: url(http://img03.taobaocdn.com/tps/i3/T1j9WiFfFaXXcu5FDa-20-20.png) no-repeat;
-	    width: 20px;
-	    height: 20px;
-	    position: absolute;
-	    bottom:0px;
-	    right: 20px;
-	    cursor: pointer;
-	    display: none;
-	}
-	.WKeditor_image_plate .rotatel{
-	    background: url(http://img02.taobaocdn.com/tps/i2/T1G.9gFe0dXXcu5FDa-20-20.png);
-	    right: 40px;
-	}
-	.WKeditor_image_plate .del-pic{
-	    width: 20px;
-	    height: 20px;
-	    border: none;
-	    border:0px;
-	    padding: 0px;
-	    font-size: 0px;
-	    left:auto;
-	    top:auto;
-	    bottom: 0px;
-	    right: 0px;
-	    background-color: transparent;
-	    background-image: url(http://img01.taobaocdn.com/tps/i1/T1.vWfFhtfXXcu5FDa-20-20.png);
-	    border-radius: 0px;
-	    position: absolute;
-	    cursor: pointer;
-	}
-	.WKeditor_video_plate{
-		position: absolute;
-		background-color:#f8f8f8;
-		padding: 50px 0px 50px 0px;
-		letter-spacing: 1px;
-		font-size: 14px;
-		display: none;
-	}
-
-	.WKeditor_video_plate .btn-confirm{
-		display: block;
-		float: left;
-		margin-left:5px;
-
-	}
-	.WKeditor_video_plate input{
-	    width:90%;
-	    height: 45px;
-	    float: right;
-	    border:1px solid #EBEBEB;
-	    color:#999;
-	    font-size:14px;
-	    padding:0 12px;
-	    margin-left: 20px;
-	} 
-	.WKeditor_video_plate table{
-		width: 100%;
-	}
-	.WKeditor_video_plate .close{
-		position: absolute;
-		right: 5px; 
-		top: 5px; 
-		font-size: 20px; 
-		height: 20px; 
-		line-height: 20px; 
-		cursor: pointer; 
-		width: 20px;
 	}

@@ -89,12 +89,10 @@ KISSY.add(function (S, Node,Base,XTemplate) {
                 top:e.clientY+$(window).scrollTop()
             });
             self.$font.hide();
-            var range = self.tool.getRange();
-            self.set("range",range);
             if(self.get("range")){
                 self.tool.setCart(self.$wrap[0],self.get("range"));
             }
-
+            self.$wrap.fire('click');
         })
 
         .on("mouseup",function(e){
