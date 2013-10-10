@@ -1,9 +1,16 @@
+/*
+combined files : 
+
+gallery/WKeditor/1.0/index
+
+*/
 /**
  * @fileoverview 
  * @author changyuan.lcy/核心 <changyuan.lcy@alibaba-inc.com>
  * @module WKeditor
  **/
-KISSY.add(function (S, Node,Base,XTemplate) {
+
+KISSY.add('WKeditor/1.0/index',function (S, Node,Base,XTemplate) {
     var EMPTY = '';
     var $ = Node.all;
     /**
@@ -16,40 +23,47 @@ KISSY.add(function (S, Node,Base,XTemplate) {
 
         var self = this;
         //调用父类构造函数
+        self.comConfig = comConfig;
         WKeditor.superclass.constructor.call(self, comConfig);
-        this.ele = this.get("ele");
-        this.init();
+        this.initializer();
     }
-    WKeditor.prototype.init = function(){
-        this.view();
-        this.event();
-        if(this.get("plugin")){
-            this.plugin(this.get("plugin"));
-        }
-        if(this.get("font")){
-            this.font(this.get("font"));
-        }
-    };
     WKeditor.prototype.tpl = {
-        wrap:$("<div class='WKeditor_wrap'></div>"),
-        plugin:[
-            {name:"product",label:"插入产品"},
-            {name:"video",label:"插入视频"},
-            {name:"image",label:"插入图片"}
-        ]
+        wrap:$("<div class='WKeditor_wrap'></div>")
     };
     WKeditor.prototype.view = function(){
         var self = this;
         
         this.view.init = function(){
-            self.$wrap = $(self.tpl.wrap);
+            self.set("$wrap",$(self.tpl.wrap));
+            self.$wrap = self.get("$wrap");
             self.$wrap.attr("contenteditable",true);
-            self.$wrap.html(self.get("message"));
-            self.plugin();
+            //self.$wrap.html(self.get("message"));
+            self.view.message();
             self.ele.append(self.$wrap);
         };
+        this.view.message = function(){
+            self.$message = $(self.get("message"));
+            self.ele.append(self.$message);
+            self.$message.on("click",function(){
+                self.$wrap.fire("focus");
+                $(this).hide();
+            });
+            self.$message.show();
+        };
         this.view.init();
-
+    };
+    WKeditor.prototype.plug = function(config,callback){
+        var self = this;
+        var tpl = "<button class='{{name}}' title='{{text}}'></button>";
+        var data = {};
+        for(var name in config){
+            data.name = name;
+            data.text = config[name];
+        }
+        var temp = new XTemplate(tpl).render(data);
+        self.$plugin.one(".box").append(temp);
+        self.plugin.render();
+        self[data.name] = callback;
     };
     WKeditor.prototype.plugin = function(config){
         var self = this;
@@ -60,38 +74,53 @@ KISSY.add(function (S, Node,Base,XTemplate) {
                 image:"插入图片"
             },
             wrap:"<div class='WKeditor_plugin'></div>",
-            btn:"<div class='box'>[data]<button class='{name}' title='{text}'></button>[/data]</div>"
+            btn:"<div class='box'>{{#each data}}<button class='{{name}}' title='{{text}}'></button>{{/each}}</div>",
+            arrow:"<div class='arrow-outer'><div class='arrow-shadow'></div></div>"
         };
         this.plugin.init = function(){
             self.plugin.view();
             self.plugin.event();
         };
         this.plugin.view = function(){
-            self.$plugin = $(self.plugin.tpl.wrap),
-                arr = [],
+            
+            self.$plugin = $(self.plugin.tpl.wrap);
+
+            var arr = [],
                 temp = "",
                 i = 0;
-
+            
             for(var name in config){
-                arr[i] = {
-                    name:name,
-                    text:self.plugin.tpl.plugin[name]
-                };
-                i++;
+                if(self.plugin.tpl.plugin[name]){
+                    arr[i] = {
+                        name:name,
+                        text:self.plugin.tpl.plugin[name]
+                    };
+                    i++;
+                }
             }
-            temp = self.tool.template(self.plugin.tpl.btn,{data:arr});
+            temp = new XTemplate(self.plugin.tpl.btn).render({data:arr});
             self.$plugin.append(temp);
-
+            
+            self.$plugin.append(self.plugin.tpl.arrow);
+            
             self.ele.append(self.$plugin);
-            self.$plugin.height(self.$plugin.all("button").length*37);
+            self.plugin.render();
         };
 
         this.plugin.event = function(){
-            self.$plugin.delegate("button","click",function(e){
-            
-                var name = $(this).attr("class");
+            self.$plugin.delegate("click","button",function(e){
+                self.$wrap.fire("focus");
+                self.set("range",self.tool.getRange());
+
+                var name = $(e.target).attr("class");
                 self[name]();
                 return false;
+            });
+        };
+        this.plugin.render = function(){
+            self.$plugin.height(self.$plugin.all("button").length*33);
+            self.$plugin.one(".arrow-outer").css({
+                top:(self.$plugin.height())/2-11
             });
         };
         this.plugin.init();
@@ -101,72 +130,17 @@ KISSY.add(function (S, Node,Base,XTemplate) {
 
         self.$wrap
             .on("click",function(){
-                if(self.tool.removeHTML(self.$wrap.html())==self.tool.removeHTML(self.get("message"))){
-                    $(this).html("");
-                }
-                $(this).fire("focus");
+                self.$message.hide();
             })
 
             .on("blur",function(){
                 if($(this).html().replace("<span></span>","").replace("<br>","") == ''){
-                    $(this).html(self.get("message"));
+                    self.$message.show();
                 }   
             })
-
-            .on("mousedown",function(e){
-                self.set("mousedown",true);
-                self.set("mouseOD",{
-                    left:e.clientX,
-                    top:e.clientY+$(window).scrollTop()
-                });
-                self.$font.hide();
-                if(self.get("range")){
-                    self.tool.setCart(self.$wrap[0],self.get("range"));
-                }
+            .on("mousedown",function(){
+                self.set('range',self.tool.getRange());
             })
-
-            .on("mouseup",function(e){
-                self.set("mouseOU",{
-                    left:e.clientX,
-                    top:e.clientY+$(window).scrollTop()
-                });
-                self.set("mousedown",false);
-
-                var range = self.tool.getRange();
-                var l =  self.get("mouseOD").left-(self.get("mouseOD").left-self.get("mouseOU").left)/2-self.$font.width()/2;
-                var t =  self.get("mouseOD").top-(self.get("mouseOD").top-self.get("mouseOU").top)/2-self.$font.height()-20;
-        
-
-                //console.log(l,t);
-
-                if((l+self.$font.width()/2)<self.ele.offset().left){
-                    l = self.ele.offset().left-self.$font.width()/2;
-                }
-                if((l+self.$font.width()/2)>self.ele.offset().left+self.ele.width()){
-                    l = self.ele.offset().left+self.ele.width()-self.$font.width()/2;
-                }
-                if(t<self.ele.offset().top){
-                    t = self.ele.offset().top-self.$font.height()-10;
-                }
-                if(t>(self.ele.offset().top+self.ele.height())){
-                    t = self.ele.offset().top+self.ele.height()-self.$font.height()-10;
-                }
-                setTimeout(function(){
-                    try{
-                        if(range.selectText){
-                            self.set("range",range);
-                            self.$font.show();
-                            self.$font.css({
-                                left:l,
-                                top:t
-                            });
-                        }
-                    }catch(e){
-
-                    }
-                },1);
-            })
-
             .on("mousemove",function(e){
                 var element = e.target;
                 switch(element.tagName.toLowerCase()){
@@ -193,24 +167,11 @@ KISSY.add(function (S, Node,Base,XTemplate) {
                 }
             })[0]
             .onpaste = function(e){
-                self.event.shotImg(e);
+                if(self.browser.chrome||self.browser.mozilla){
+                    self.event.shotImg(e);
+                }
+                self.tool.fliter(self.$wrap);
             };
-        $(document)
-            .on("mouseup",function(e){
-
-            if(self.get("mousedown")){
-                self.$wrap.fire("mouseup",e);
-                self.set("mouseOU",{
-                    left:e.clientX,
-                    top:e.clientY+$(window).scrollTop()
-                });
-            }else if(S.inArray(e.target,self.$font.all("button"))){
-            }else{
-                self.$font.hide();
-            }
-            return false;
-        });
-
         self.event.shotImg = function(e){
             var clipboardData = e.clipboardData;
             if(clipboardData&&clipboardData.items){
@@ -234,26 +195,32 @@ KISSY.add(function (S, Node,Base,XTemplate) {
         self.event.showImgOp = function(el){
             var $area = self.ele;
             var img = $(el);
+            function setPosition(btn,n){
+                n = n || 0;
+                btn.css({
+                    left:img.offset().left+img.width()-33-self.left-n,
+                    top:img.offset().top-self.top,
+                    position:"absolute",
+                    display:"block"
+                });
+            }
             void function removeBtn(){
                 var button = $area.all(".removeImage");
                 if($area.all(".removeImage").length==0){
                     button = $("<button class='removeImage'></button>");
                     $area.append(button);
                 }
-                button.css({
-                    left:img.offset().left+img.width()-33,
-                    top:img.offset().top,
-                    position:"absolute",
-                    display:"block"
-                });
-                button.on("click",function(){
+                setPosition(button);
+                button.detach().on("click",function(){
                     if(img.attr("loadingid")){
                         var loadingimg = $("#editorMain").all("img[loadingid="+img.attr("loadingid")+"]");
                         if(loadingimg.length>0){
                             loadingimg.remove();
                         }
                     }
+                    self.tool.setCart(img.parent()[0],self.get("range"));
                     img.remove();
+
                     button.hide();
                     return false;
                 });
@@ -264,12 +231,7 @@ KISSY.add(function (S, Node,Base,XTemplate) {
                     button = $("<button class='centerImage'>居中</button>");
                     $area.append(button);
                 }
-                button.css({
-                    left:img.offset().left+img.width()-33-46,
-                    top:img.offset().top,
-                    position:"absolute",
-                    display:"block"
-                });
+                setPosition(button,46);
                 button.detach("click").on("click",function(){
                     var p = $("<p style='text-align:center'></p>");
                     img.before(p);
@@ -312,140 +274,98 @@ KISSY.add(function (S, Node,Base,XTemplate) {
         save:"正在保存...",
         saveSuc:"保存成功"
     };
-    WKeditor.prototype.command = {
-        /**
-         * 设置字体加粗
-         */
-        setFontBold:function(){
-           document.execCommand("Bold",false,true);
-        },
-        /**
-         * 设置内容斜体
-         */
-        setContentItalic:function(){
-            document.execCommand("Italic",false,true);
-        },
-        /**
-         * 设置内容下划线
-         */
-        setContentUnderline:function(){
-            document.execCommand('Underline',false,true);
-        },
-        /**
-         * 设置文字大小
-         * @param  {[type]} size [description]
-         */
-        setFontSize:function(size){
-            document.execCommand('FontSize',false,size);
-            if(size=="2"){
-                document.execCommand("RemoveFormat");
-            }
-        },
-        /**
-         * 插入无序列表
-         */
-        insertUnorderedList:function(){
-            document.execCommand('InsertUnorderedList',false,null);
-        }
-    }
-
-    WKeditor.prototype.image = function(config){
+    WKeditor.prototype.image = function(){
         var self = this;
-        this.image.init = function(){
-            self.image.view();
-            self.image.event();
-        };
-        this.image.tpl = {
-            wrap:'<div class="WKeditor_image_plate" id="WKeditor_image_plate">\
-                <div class="uploadBox">\
-                    <p class="canDragMsg">（拖拽图片可修改顺序）</p>\
-                    <ul id="J_UploaderQueue" class="grid"></ul>\
-                    <div class="box">\
-                        <p class="top">可拖动多张本地图片到这里上传<br/>或</p>\
-                        <div class="up_btn"><a href="javascript:void(0)" class="btn-uploader wk-btn btn-bg-blue btn-large"><span class="btn-text">选择文件</span><div class="file-input-wrapper" style="overflow: hidden;"><input type="file" name="Filedata" hidefocus="true" class="file-input" style="" multiple="multiple"></div></a>\
-                        <a class="btn-confirm wk-btn btn-bg-blue btn-large">确认插入</a></div>\
-                        <p class="text">Jpg，Gif，PNG,单张最大6M</br>图片尺寸超过480*270像素可以在首页展示缩略图</p>\
-                    </div>\
-                </div><div class="close">×</div>\
-            </div>'
-        };
-
-        this.image.view = function(){
-            self.$image = $(self.image.tpl.wrap);
-            self.ele.append(self.$image);
-            self.$image.width(self.ele.width()).show();
-            self.$image.css({
-                zIndex:100,
-                left:($(window).width()-self.$image.width())/2,
-                top:($(window).height()-self.$image.height())/2
-            });
-            $.plugin("Dmimi.overlay",{
-                ele:self.$image
-            },function(obj){
-                self.$overlay = obj.$overlay;
-            });
-            self.image.view.preview = function(i){
-
-                    var template = $('<li class="queue-file"><div class="imageBox">'+
-                        '<div class="pic"><img loadid="'+i+'"/></div>'+
-                        '<div class="operate"><span title="左旋" class="rotatel"></span>'+
-                        '<span title="右旋" class="rotate"></span>'+
-                        '<span title="删除" class="del-pic"></span></div></div></li>');
-                    template.on("mouseenter",function(){
-                        template.all(".operate").show();
-                    }).on("mouseleave",function(){
-                        template.all(".operate").hide();
-                    });
-                    template.all(".del-pic").on("click",function(){
-                        var self = this;
-                        Wanke.T.confirmDelete(function(){
-                            $(self).parent().parent().parent().remove();
-                            _class.tool.realign($("#J_UploaderQueue"),"ani");
-                            if($("#J_UploaderQueue").children().length==0){
-                                uploadRest();
-                            }
-                        },"确定要删除这张图吗？");
-                    });
-                    //_class.tool.rotate(template.one(".rotatel"),"left");
-                    //_class.tool.rotate(template.one(".rotate"));
-                    return template;
-            }
-        };
-
-        this.image.event = function(){
-            $.plugin("Dmimi.uploader",{
-                input:$(".btn-uploader").get(),
-                btn:$(".btn-confirm").get(),
-                select:function(files){
-
-                    files = files[0];
-
-                    for(var i=0;i<files.length;i++){
-                        var img = document.createElement("img");
-                        img.file = files[i];
-                        img.t = +new Date();
-                        var reader = new FileReader();  
-                        reader.onload = (function(aImg) { 
-                            return function(e) {
-                                //aImg.src = e.target.result;
-                                $("#J_UploaderQueue").all("img[loadid="+aImg.t+"]").attr("src",e.target.result);
-                            }; 
-                        })(img);
-                        reader.readAsDataURL(files[i]);
-                        $("#J_UploaderQueue").append(self.image.view.preview(img.t));
-                    }
-                    $.plugin("Dmimi.realign",{ele:$("#J_UploaderQueue")});
-                    self.event.drag();
-                }
-
-            });
+        KISSY.use("WKimage,WKimage.css",function(S,WKimage){
+            self.Wkimage = new WKimage(self.getAttrVals());
+        });
+    };
+    WKeditor.prototype.video = function(){
+        var self = this;
+        KISSY.use("WKvideo,WKvideo.css",function(S,WKvideo){
             
-            self.$image.all(".close").on("click",function(){
-                self.$image.remove();
-                self.$overlay.remove();
-            });
-            self.event.drag = function(){
-                $("#J_UploaderQueue").all(".queue-file").drag(
+            self.WKvideo = new WKvideo(self.getAttrVals());
+        });
+    };
+    WKeditor.prototype.font = function(config){
+        var self = this;
+        KISSY.use("WKfont,WKfont.css",function(S,WKfont){
+            self.set("config",config);
+            self.WKfont = new WKfont(self.getAttrVals());
+        });
+    };
+    WKeditor.prototype.tool = function(){
+        var self = this;
+        return {
+            fliter:function(dom){
+                var FLITER_REG = self.reg.fliterReg;
+                function theNextReplace(){
+                    dom.all("*").each(function(){
+                        var name = $(this)[0].tagName;
+                        
+                        var _c = $(this).attr('class');
+
+                        $(this).removeAttr("class");
+                        $(this).removeAttr("id");
+                        $(this).removeAttr("onclick");
+                        $(this).removeAttr("onmoueover");
+                        if(_c == "wankeEditorLink"){
+                            $(this).addClass("wankeEditorLink");
+                        }
+                        if(_c == "h5-video"){
+                            $(this).addClass("h5-video");
+                        }
+                        if(name=="FONT"){
+                            $(this).removeAttr("color");
+                            $(this).removeAttr("face");
+                        }
+                        if(name=="P"){
+                            var center = $(this).css("text-align");
+                            $(this).removeAttr("style");
+                            $(this).css("text-align",center);
+                        }else{
+                            if(name!="EMBED"){
+                                $(this).removeAttr("style");
+                            }
+                        }
+                    });
+                }
+                setTimeout(function(){
+                    var len = dom.all("*").length;
+                    dom.all("*").each(function(obj,index){
+                        var name = $(this)[0].tagName;
+                        if(!S.inArray(name,FLITER_REG.split("|"))){
+                            $(this).remove();
+                        }
+                        /*
+                        if(name=="IMG"){
+                            var newImg = $(this).clone();
+                            newImg.removeAttr("setdragg");
+                            $(this).after(newImg);
+                            $(this).remove();
+                        }
+                        */
+                        if(index==len-1){
+                            theNextReplace();
+                        }
+                    });
+                },10);
+            },
+            insertArea:function(){
+                var id = +new Date();
+                var $insertArea = $("<div class='insertArea' id='"+id+"'></div>");
+                if(self.tool.removeHTML(self.$wrap.html())==self.tool.removeHTML(self.get("message"))){
+                    self.$wrap.fire("click");
+                    self.$wrap.fire("focus");
+                    self.set("range",self.tool.getRange());
+                }
+                self.tool.insert($insertArea[0],self.get("range"));
+                self.$message.hide();
+                return $("#"+id);
+            },
+            dragSort:function(self){
+                self._default = {};
+                this.drag.apply($("#J_UploaderQueue").all(".queue-file"),[
                     function(e){
                         // down
                         this.x = e.clientX - parseInt($(this).css("left"));
@@ -454,21 +374,10 @@ KISSY.add(function (S, Node,Base,XTemplate) {
                             "opacity":1,
                             zIndex:89
                         });
-                        self.event.dragDown = true;
-                        $("#J_UploaderQueue").all(".queue-space").on("mouseenter",function(){
-                            if(self.event.dragDown){
-                                $(this).css({
-                                    opacity:1
-                                }).animate({
-                                    width:parseInt($(this).attr("space"))-6
-                                },100);
-                                self.event.space = $(this);
-                            }
-                        }).on("mouseleave",function(){
-                            $(this).css({
-                                opacity:0
-                            });
-                            self.event.space = null;
+                        self._default.dragDown = true;
+                        $("#J_UploaderQueue").all(".queue-space").css({
+                            opacity:0,
+                            width:parseInt($("#J_UploaderQueue").attr("space"))-6
                         });
                     },
                     function(e){
@@ -479,238 +388,303 @@ KISSY.add(function (S, Node,Base,XTemplate) {
                             left:left,
                             top:top
                         });
+
+                        function inSpace(x,y){
+                            S.each($("#J_UploaderQueue").all(".queue-space"),function(dom){
+                                var l,t,w,h;
+                                l = $(dom).offset().left;
+                                t = $(dom).offset().top;
+                                w = $(dom).width();
+                                h = $(dom).height();
+                                if(x>l&&x<(l+w)&&y>t&&y<(t+h)){
+                                    $(dom).css({
+                                        opacity:1
+                                    });
+                                    self._default.space = $(dom);
+                                }else{
+                                    $(dom).css({
+                                        opacity:0
+                                    });
+                                }
+                            });
+                        }
+                        inSpace(e.clientX,e.clientY+$(window).scrollTop());
+
                     },
                     function(){
                         // press
-                        if(self.event.space){
-                            self.event.space.before($(this));
+                        if(self._default.space){
+                            self._default.space.before($(this));
                             $(this).animate({
                                 width:100,
                                 height:100
-                            });
-                            $.plugin("Dmimi.realign",{ele:$("#J_UploaderQueue"),ani:true});
-                            self.event.space = null;
+                            },1/5);
+                            self.tool.realign($("#J_UploaderQueue"),"ani");
+                            self._default.space = null;
                         }else{
                             $(this).animate({
                                 left:$(this).attr('dleft'),
                                 top:$(this).attr('dtop'),
                                 width:100,
                                 height:100
-                            });
+                            },1/3);
                         }
                         $(this).css({
                             "opacity":1,
                             zIndex:88
                         })
-                        self.event.dragDown = false;
+                        self._default.dragDown = false;
+                    },
+                ]);
+            },
+            drag:function(downCallback,moveCallback,upCallback){
+                var ele = this;
+                S.each(ele,function(dom){
+                    dom.downCallback = downCallback;
+                    dom.moveCallback = moveCallback;
+                    dom.upCallback = upCallback;
+
+                    $(dom).css({cursor:"move"});
+                    $(dom).on("mousedown",function(e){
+                        e.preventDefault();
+
+                        dom.downCallback(e);
+                        document.onmousemove = function(e){
+                            e = e||event;
+                            window.getSelection ? window.getSelection().removeAllRanges() : document.selection.empty();
+                            dom.moveCallback(e);
+                            //IE 去除容器内拖拽图片问题 
+                            if (document.all){
+                                e.returnValue = false;
+                            }
+
+                        }
+                        $(document).on("mouseup",function(e){
+                            document.onmousemove = null;
+                            $(document).detach("mouseup");
+                            dom.upCallback(e);
+                        });
+                    });
+                });
+                return ele;
+            },
+            /*
+                用于图片列表重排
+            */
+            realign:function(ul,ani){
+                var ele = ul;
+                var w = ele.width(),
+                    opts = {
+                        minSpace:20,
+                        width:100,
+                        height:100
+                    },
+                    num = Math.floor(w/opts.width),
+                    child = ele.children(".queue-file"),
+                    expresstion = function(num){
+                        return (w-opts.width*num)/(num+1);
+                    },
+                    left = 0,
+                    top = 0;
+                function findTNum(num){
+                    w = ele.width();
+                    var space = expresstion(num);
+                    if(space>opts.minSpace){
+                        var line = 0;
+                        S.each(child,function(dom,index){
+                            left = (opts.width+space)*(index%num)+space;
+                            top = (opts.height+space)*(Math.floor(index/num))+space;
+                            if(ani){
+                                $(dom).animate({
+                                    left:left,
+                                    top:top
+                                },1/4);
+                            }else{
+                                $(dom).css({
+                                    left:left,
+                                    top:top
+                                });
+                            }
+                            $(dom).attr('dleft',left).attr("dtop",top);
+                        });
+                        ele.height((Math.ceil(child.length/num))*(opts.height+space)+space);
+                        ele.attr("num",num).attr("space",space);
+                        // setSpace
+                        ele.all(".queue-space").remove();
+                        ele.all(".beQs").removeClass("beQs");
+
+                        var qs = $("<li class='queue-space'></li>");
+                        qs.css({
+                            opacity:0,
+                            background:"#f8f8f8"
+                        });
+                        S.each(child,function(dom,index){
+                            if($(dom).hasClass("beQs")){
+                                return;
+                            }
+                            if(!$(dom).prev()||!$(dom).prev().hasClass("queue-space")||$(dom).prev().hasClass("linelast")){
+                                $(dom).before(qs.clone());
+                            }
+                            if((index+1)%num==0){
+                                $(dom).after(qs.clone().addClass("linelast"));
+                            }
+                            else if(index==child.length-1){
+                                $(dom).after(qs.clone());
+                            }
+                            $(dom).addClass("beQs");
+                        });
+                        S.each(ele.children(".queue-space"),function(dom,index){
+                            left = (opts.width+space)*(index%(num+1));
+                            top = (opts.height+space)*(Math.floor(index/(num+1)))+space;
+                            $(dom).css({
+                                left:left,
+                                top:top
+                            }).attr("space",space);
+                        });
+                    }else{
+                        num--;
+                        if(num>0){
+                            findTNum(num);
+                        }
                     }
-                );
-            }
-        };
-        this.image.init();
-    };
-    /*
-        @param {array} 配置font组件 ["hugeFont","largeFont","normalFont","strongFont"]
-    */
-    WKeditor.prototype.font = function(config){
-        var self = this;
-        this.font.init = function(){
-            self.font.reset();
-            self.font.view();
-            self.font.event();
-        };
-        this.font.tpl = {
-            font:{
-                hugeFont:{
-                    text:"超大字体",
-                    size:"6",
-                    command:"setFontSize"
-                },
-                largeFont:{
-                    text:"大字体",
-                    size:"4",
-                    command:"setFontSize"
-                },
-                normalFont:{
-                    text:"正常字体",
-                    size:"2",
-                    command:"setFontSize"
-                },
-                strongFont:{
-                    text:"文字加粗",
-                    command:"setFontBold"
-                },
-                listText:{
-                    text:"列表",
-                    command:"insertUnorderedList"
-                },
-                italicText:{
-                    text:"斜体",
-                    command:"setContentItalic"
+                }
+                findTNum(num);
+            },
+            overlay:function(options){
+                var opts = S.merge(options,{
+                    opacity:0.6,
+                    background:"#666",
+                    zIndex:999
+                });
+                var _class = {
+                    view:function(){
+                        _class.$overlay.css({
+                            top:0,
+                            left:0,
+                            height:$(document).height(),
+                            width:$(window).width(),
+                            position:"absolute",
+                            opacity:opts.opacity,
+                            background:opts.background,
+                            zIndex:parseInt(opts.ele.css("z-index"))-1||opts.zIndex
+                        });
+                    },
+                    event:function(){
+                        $(window).on("resize",function(){
+                            _class.view();
+                        });
+                    },
+                    init:function(){
+                        _class.$overlay = $("<div class='overlay'></div>");
+                        _class.$overlay.appendTo($("body"));
+                        _class.view();
+                        _class.event();
+                    }
+                };
+                _class.init();
+                return _class;
+            },
+            browser:function(){
+                var userAgent = window.navigator.userAgent.toLowerCase(); 
+                var object = { 
+                    version: (userAgent.match( /.+(?:rv|it|ra|ie)[\/: ]([\d.]+)/ ) || [0,'0'])[1], 
+                    safari: /webkit/.test( userAgent ) && !(/chrome/i.test(userAgent) && /webkit/i.test(userAgent) && /mozilla/i.test(userAgent)), 
+                    opera: /opera/.test( userAgent ), 
+                    msie: /msie/.test( userAgent ) && !/opera/.test( userAgent ), 
+                    mozilla: /mozilla/.test( userAgent ) && !/(compatible|webkit)/.test( userAgent )&& !(/chrome/i.test(userAgent) && /webkit/i.test(userAgent) && /mozilla/i.test(userAgent)),
+                    chrome: /chrome/i.test(userAgent) && /webkit/i.test(userAgent) && /mozilla/i.test(userAgent)
+                };
+                return object;
+            },
+            formatBlock:function(self){
+                document.execCommand('FormatBlock',false,'p');
+                document.execCommand("RemoveFormat");
+            },
+            /**
+             * 移除HTML代码
+             * @param  {[type]} str 字符串
+             */
+            removeHTML:function(str) {
+                str = str.toLowerCase();
+                str = str.replace(/<\/?[^>]*>/g,''); //去除HTML tag
+                str = str.replace(/[ | ]*\n/g,'\n'); //去除行尾空白
+                str = str.replace(/[\r\n\s"]/ig,"");
+                return str;
+            },
+            getSelection:function(){
+                return window.getSelection ? window.getSelection() : document.selection;
+            },
+            getRange:function(){
+                var range;
+                    range = this.getSelection().createRange ? this.getSelection().createRange() : this.getSelection().getRangeAt(0);
+                    if(range.text){
+                        range.selectText = range.text
+                    }
+
+                    if(range.toString){
+                        range.selectText = range.toString();
+                    }
+                    
+                
+                return range;
+            },
+            //设置光标位置
+            setCart:function(dom,range) {
+                if(document.selection&&parseInt(self.browser.version)<9){
+                    range.collapse(false);
+                    range.select();
+                }else{
+                    range.setStartAfter(dom);
+                    range.collapse(true);
+                    this.getSelection().removeAllRanges();
+                    this.getSelection().addRange(range);
                 }
             },
-            wrap:"<div class='WKeditor_font_plate'></div>",
-            btn:"<div class='box'>{{#each data}}<button command='{{command}}' {{#if size}} size='{{size}}' {{/if}}  class='{{name}} command' title='{{text}}'></button>{{/each}}</div>",
-            arrow: "<div class='arrow'></div>"
-        };
-
-        this.font.view = function(){
-            self.$font = $(self.font.tpl.wrap),
-                arr = [],
-                temp = "";
-
-            for(var i=0,len=config.length;i<len;i++){
-                arr[i] = {
-                    name:config[i],
-                    command:self.font.tpl.font[config[i]].command,
-                    size:self.font.tpl.font[config[i]].size,
-                    text:self.font.tpl.font[config[i]].text
-                };
-            }
-            temp = new XTemplate(self.font.tpl.btn).render({data:arr})
-            self.$font.append(temp);
-            self.$font.append(self.font.tpl.arrow);
-            self.$font.width(self.$font.all("button").length*32);
-
-            self.ele.append(self.$font);
-        };
-
-        this.font.event = function(){
-            self.$font.all("button").on("click",function(e){
-                var command = $(this).attr("command");
-                if(command=="setFontSize"){
-                    self.command[command]($(this).attr("size"));
+            //插入到光标位置
+            insert:function(dom,range){
+                var selection = this.getSelection();
+                if (!window.getSelection || (self.browser.msie && parseInt(self.browser.version)<9)){
+                    range.pasteHTML(dom.outerHTML);
+                    range.select();
                 }else{
-                    self.command[command]();
-                }
-                return false;
-            });
-        };
-        this.font.reset = function(){
-            self.ele.all(".WKeditor_font_plate").remove();
-        };
-        this.font.init();
-    };
-    WKeditor.prototype.tool = {
-        browser:function(){
-            var userAgent = window.navigator.userAgent.toLowerCase(); 
-            var object = { 
-                version: (userAgent.match( /.+(?:rv|it|ra|ie)[\/: ]([\d.]+)/ ) || [0,'0'])[1], 
-                safari: /webkit/.test( userAgent ) && !(/chrome/i.test(userAgent) && /webkit/i.test(userAgent) && /mozilla/i.test(userAgent)), 
-                opera: /opera/.test( userAgent ), 
-                msie: /msie/.test( userAgent ) && !/opera/.test( userAgent ), 
-                mozilla: /mozilla/.test( userAgent ) && !/(compatible|webkit)/.test( userAgent )&& !(/chrome/i.test(userAgent) && /webkit/i.test(userAgent) && /mozilla/i.test(userAgent)),
-                chrome: /chrome/i.test(userAgent) && /webkit/i.test(userAgent) && /mozilla/i.test(userAgent)
-            };
-            return object;
-        },
-        formatBlock:function(self){
-            document.execCommand('FormatBlock',false,'p');
-            document.execCommand("RemoveFormat");
-        },
-        /*
-            @param {dom}{string}  Such as "{text}  [list] {name} [/list]
-            @param {json} data
-        */
-        template:function(obj,json){
-            var str;
-            function fun(str){
-                for(var name in json){
-                    if(typeof json[name]=="object"){
-                        var getStr = str.substring(str.indexOf("["+name+"]")+2+name.length,str.lastIndexOf("[/"+name+"]"));
-                        var newStr = "";
-                        for(var i=0;i<json[name].length;i++){
-                            var newStrP = getStr;
-                            for(var s in json[name][i]){
-                                if(json[name][i][s]==undefined){
-                                    json[name][i][s] = "";
-                                }
-                                newStrP = newStrP.replace(eval("/{"+s+"}/ig"),json[name][i][s]);
-                            }
-                            newStr+=newStrP;
-                        }
-                        str = str.replace("["+name+"]"+getStr+"[/"+name+"]",newStr);
-                    }else{
-                        if(json[name]==undefined){
-                            json[name] = "";
-                        }
-                        str = str.replace(eval("/{"+name+"}/ig"),json[name]);
+                    var hasR = dom;
+                    var hasR_lastChild = hasR.lastChild;
+                    while (hasR_lastChild && hasR_lastChild.nodeName.toLowerCase() == "br" && hasR_lastChild.previousSibling && hasR_lastChild.previousSibling.nodeName.toLowerCase() == "br") {
+                        var e = hasR_lastChild;
+                        hasR_lastChild = hasR_lastChild.previousSibling;
+                        hasR.removeChild(e)
+                    }                                
+                    range.insertNode(hasR);
+                    if (hasR_lastChild) {
+                        range.setEndAfter(hasR_lastChild);
+                        range.setStartAfter(hasR_lastChild);
                     }
                 }
-                return str;
+                this.setCart(dom,range);
             }
-            if(typeof obj=="object"){
-                str = String(obj.html());
-                return obj.html(fun(str));
-            }else{
-                str = obj;
-                str = fun(str);
-                return str;
-            }
-        },
-        /**
-         * 移除HTML代码
-         * @param  {[type]} str 字符串
-         */
-        removeHTML:function(str) {
-            str = str.toLowerCase();
-            str = str.replace(/<\/?[^>]*>/g,''); //去除HTML tag
-            str = str.replace(/[ | ]*\n/g,'\n'); //去除行尾空白
-            str = str.replace(/[\r\n\s"]/ig,"");
-            return str;
-        },
-        getSelection:function(){
-            return window.getSelection ? window.getSelection() : document.selection;
-        },
-        getRange:function(){
-            try{
-                var range = this.getSelection().createRange ? this.getSelection().createRange() : this.getSelection().getRangeAt(0);
-              
-                range.selectText = range.text ? range.text : range.toString();
-                return range;
-            }catch(e){}
-        },
-        //设置光标位置
-        setCart:function(dom,range) {
-            if(document.selection&&parseInt(this.browser().version)<9){
-                range.collapse(false);
-                range.select();
-            }else{
-                range.setStartAfter(dom);
-                range.collapse(true);
-                this.getSelection().removeAllRanges();
-                this.getSelection().addRange(range);
-            }
-        },
-        //插入到光标位置
-        insert:function(dom,range){
-            var selection = this.getSelection(),
-                browser = this.browser();
-            if (!window.getSelection || (browser.msie && parseInt(browser.version)<10)){
-                range.pasteHTML(dom);
-            }else{
-                var hasR = dom;
-                var hasR_lastChild = hasR.lastChild;
-                while (hasR_lastChild && hasR_lastChild.nodeName.toLowerCase() == "br" && hasR_lastChild.previousSibling && hasR_lastChild.previousSibling.nodeName.toLowerCase() == "br") {
-                    var e = hasR_lastChild;
-                    hasR_lastChild = hasR_lastChild.previousSibling;
-                    hasR.removeChild(e)
-                }                                
-                range.insertNode(hasR);
-                if (hasR_lastChild) {
-                    range.setEndAfter(hasR_lastChild);
-                    range.setStartAfter(hasR_lastChild);
-                }
-            }
-            this.setCart(dom,range);
-        }
+        };
     }
     S.extend(WKeditor, Base, /** @lends WKeditor.prototype*/{
-
+        initializer:function(){
+            this.ele = this.get("ele");
+            this.set("left",this.ele.offset().left);
+            this.set("top",this.ele.offset().top);
+            this.left = this.get("left");
+            this.top = this.get("top");
+            this.view();
+            this.event();
+            if(this.get("plugin")){
+                this.plugin(this.get("plugin"));
+            }
+            if(this.get("plugin").font){
+                this.font(this.get("plugin").font);
+            }
+            this.tool = this.tool();
+            this.set("tool",this.tool);
+            this.browser = this.tool.browser();
+        }
     }, {ATTRS : /** @lends WKeditor*/{
     }});
+
     return WKeditor;
 }, {requires:['node', 'base' ,'xtemplate']});
-
-
-

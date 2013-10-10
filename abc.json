@@ -1,14 +1,15 @@
 {
-    "name": "WKeditor",
-    "version": "1.0",
-    "desc": "",
-    "cover": "",
+    "name":"WKeditor",
+    "version":"1.0",
+    "desc":"",
+    "cover":"",
     "tag":"editor",
-    "author": {
-        "name": "changyuan.lcy",
-        "email": "changyuan.lcy@alibaba-inc.com",
-        "page": ""
-    },
-    "type": "kissy-gallery",
-    "type-url": "http://gallery.kissyui.com/guide"
+    "author":{
+    "name":"changyuan.lcy",
+    "email":"changyuan.lcy@alibaba-inc.com",
+    "page":""
+},
+    "type":"kissy-gallery",
+    "type-url":"http://gallery.kissyui.com/guide",
+    "githubName":"306808700@qq.com"
 }
