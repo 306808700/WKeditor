@@ -10,7 +10,7 @@
 <body>
 <style type="text/css">
     body{
-        background: #f6f6f6;
+        background: #eee;
         font:12px/1.5 "微软雅黑";
     }
     #wankePost {
@@ -22,7 +22,7 @@
     }
     .title{
         font-size: 24px;
-        color: #333;
+        color: #666;
         padding: 10px 10px 10px 20px;
         border-bottom: 1px solid #eee;
 
@@ -42,7 +42,7 @@
     <div style="width:800px;margin:auto">WKeditor 1.0</div></h2>
 
 <div id="wankePost">
-    <div class='title'>玩客编辑器 <a href="http://wanke.etao.com" target="_blank">http://wanke.etao.com</a></div>    
+    <div class='title'>标题</div>    
     <div id="WKeditor"></div>
 </div>
 <div class="copyright">14707 @核心</div>
@@ -96,23 +96,42 @@
             plugin:{
                 font:[
                     "hugeFont","largeFont","normalFont","strongFont","listText"
-                ],
-                image:{
-                    action:"upload.php"
-                }
+                ]
             },
             ele:S.one("#WKeditor")
         }
-        Editor = new WKeditor(comConfig);
+        var Editor = new WKeditor(comConfig);
         Editor.plug({
-            video:"插入视频"
+            video:{
+                setUrl:function(){
+                    var url;
+                    /*
+                        视频插入只支持swf格式的链接
+                        你可以通过这个方法设置正确的链接。
+                    */
+                    return url;
+                }
+            }
         },function(){
             var self = this;
             KISSY.use("WKvideo,WKvideo.css",function(S,WKvideo){
                 self.WKvideo = new WKvideo(self.getAttrVals());
             });
         });
+        Editor.plug({
+            image:{
+                action:"upload.php",
+                allowExts:"jpg,gif,png,jpeg"
+                //dragSort:true
+            }
+        },function(){
+            var self = this;
+            KISSY.use("WKimage,WKimage.css",function(S,WKimage){
+                self.WKimage = new WKimage(self.getAttrVals());
+            });
+        });
     });
+    
 
 
 </script>

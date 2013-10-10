@@ -63,6 +63,10 @@ KISSY.add(function (S, Node,Base) {
             return p;   
         }
         self.view.insertVideo = function(url){
+            if(url.indexOf(".swf")==-1){
+                alert("只能支持swf格式地址");
+                return;
+            }
             var p = self.view.preview(url);
             self.$insertArea.before(p);
             self.$insertArea.remove();
