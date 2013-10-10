@@ -165,7 +165,7 @@ KISSY.add(function (S, Node,Base) {
                         type:type,
                         //手动控制flash的尺寸
                         swfSize:{"width":90, "height":45},
-                        action:self.get("plugin").image.action,
+                        action:self.config.action,
                         multiple:multiple,
                         autoUpload:"true"
                     });
@@ -187,7 +187,7 @@ KISSY.add(function (S, Node,Base) {
                         max:100,
                         //图片最大允许大小
                         maxSize:10*1024,
-                        allowExts:'jpg,gif,png,jpeg'
+                        allowExts:self.config.allowExts
                         
                     }))
                     //url保存插件
@@ -441,6 +441,7 @@ KISSY.add(function (S, Node,Base) {
             this.$wrap = this.get("$wrap");
             this.tool = this.get("tool");
             this.browser = this.tool.browser();
+            this.config = this.get("config");
             this.view();
             this.event();
         }

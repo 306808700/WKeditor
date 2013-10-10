@@ -63,12 +63,23 @@ KISSY.add(function (S, Node,Base) {
             return p;   
         }
         self.view.insertVideo = function(url){
-            var p = self.view.preview(url);
-            self.$insertArea.before(p);
-            self.$insertArea.remove();
-            self.$overlay.remove();
-            self.$video.remove();
-            self.tool.setCart(p[0],self.get("range"));
+            if(url.indexOf(".swf")==-1){
+                alert("只能支持swf格式地址");
+                return;
+            }
+            function doit (url){
+                var p = self.view.preview(url);
+                self.$insertArea.before(p);
+                self.$insertArea.remove();
+                self.$overlay.remove();
+                self.$video.remove();
+                self.tool.setCart(p[0],self.get("range"));
+            }
+            if(self.config.setUrl){
+                doit(self.config.setUrl(url));
+            }else{
+                doit(url);   
+            }
         }
         self.$insertArea = self.tool.insertArea();
     };

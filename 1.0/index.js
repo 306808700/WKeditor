@@ -274,16 +274,17 @@ KISSY.add('WKeditor/1.0/index',function (S, Node,Base,XTemplate) {
         save:"正在保存...",
         saveSuc:"保存成功"
     };
-    WKeditor.prototype.image = function(){
+    WKeditor.prototype.image = function(config){
         var self = this;
         KISSY.use("WKimage,WKimage.css",function(S,WKimage){
+            self.set("config",config);
             self.Wkimage = new WKimage(self.getAttrVals());
         });
     };
-    WKeditor.prototype.video = function(){
+    WKeditor.prototype.video = function(config){
         var self = this;
         KISSY.use("WKvideo,WKvideo.css",function(S,WKvideo){
-            
+            self.set("config",config);
             self.WKvideo = new WKvideo(self.getAttrVals());
         });
     };
