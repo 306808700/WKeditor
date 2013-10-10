@@ -30,33 +30,35 @@ WKeditor是一款非常简洁且新颖的富文本编辑器，目前在玩客项
 * @ele {node} 渲染的节点
 
 ## plugin 扩展-视频插入
-Editor.plug({
-    video:{
-        setUrl:function(){
-            var url;
-            /*
-                视频插入只支持swf格式的链接
-                你可以通过这个方法设置正确的链接。
-            */
-            return url;
-        }
-},function(){
-    var self = this;
-    KISSY.use("WKvideo,WKvideo.css",function(S,WKvideo){
-        self.WKvideo = new WKvideo(self.getAttrVals());
+
+    Editor.plug({
+        video:{
+            setUrl:function(){
+                var url;
+                /*
+                    视频插入只支持swf格式的链接
+                    你可以通过这个方法设置正确的链接。
+                */
+                return url;
+            }
+    },function(){
+        var self = this;
+        KISSY.use("WKvideo,WKvideo.css",function(S,WKvideo){
+            self.WKvideo = new WKvideo(self.getAttrVals());
+        });
     });
-});
 
 ## plugin 扩展-图片上传
-Editor.plug({
-    image:{
-        action:"upload.php",
-        allowExts:"jpg,gif,png,jpeg"
-        //dragSort:true
-    }
-},function(){
-    var self = this;
-    KISSY.use("WKimage,WKimage.css",function(S,WKimage){
-        self.WKimage = new WKimage(self.getAttrVals());
+
+    Editor.plug({
+        image:{
+            action:"upload.php",
+            allowExts:"jpg,gif,png,jpeg"
+            //dragSort:true
+        }
+    },function(){
+        var self = this;
+        KISSY.use("WKimage,WKimage.css",function(S,WKimage){
+            self.WKimage = new WKimage(self.getAttrVals());
+        });
     });
-});
