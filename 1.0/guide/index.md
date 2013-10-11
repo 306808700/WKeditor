@@ -30,8 +30,8 @@ WKeditor是一款非常简洁且新颖的富文本编辑器，目前在玩客项
 * @ele {node} 渲染的节点
 
 ## 插件调用
-*@param {object} 会根据name 和 text 生成一个button 按钮
-*@param {function} 按钮点击触发所执行的函数
+* @param {object} 会根据name 和 text 生成一个button 按钮
+* @param {function} 按钮点击触发所执行的函数
 
     Editor.plug(object function);
     
