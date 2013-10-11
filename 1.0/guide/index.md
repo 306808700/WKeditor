@@ -29,36 +29,51 @@ WKeditor是一款非常简洁且新颖的富文本编辑器，目前在玩客项
 * @font {Array} 文本操作按钮，默认提供以上列出的5种。
 * @ele {node} 渲染的节点
 
-## plugin 扩展-视频插入
+## 插件调用
+*@param {object} 会根据name 和 text 生成一个button 按钮
+*@param {function} 按钮点击触发所执行的函数
+
+    Editor.plug(object function);
+    
+
+##  使用插件【视频插入】
+
 
     Editor.plug({
-        video:{
-            setUrl:function(){
-                var url;
-                /*
-                    视频插入只支持swf格式的链接
-                    你可以通过这个方法设置正确的链接。
-                */
-                return url;
-            }
+        name:"video",
+        text:"插入视频"
     },function(){
         var self = this;
         KISSY.use("WKvideo,WKvideo.css",function(S,WKvideo){
+            var config = {
+                setUrl:function(){
+                    var url;
+                    /*
+                        视频插入只支持swf格式的链接
+                        你可以通过这个方法设置正确的链接。
+                    */
+                    return url;
+                }
+            };
             self.WKvideo = new WKvideo(self.getAttrVals());
+            self.WKvideo.init(config);
         });
     });
 
-## plugin 扩展-图片上传
+##  使用插件【图片上传】
 
     Editor.plug({
-        image:{
-            action:"upload.php",
-            allowExts:"jpg,gif,png,jpeg"
-            //dragSort:true
-        }
+        name:"image",
+        text:"插入图片"
     },function(){
         var self = this;
         KISSY.use("WKimage,WKimage.css",function(S,WKimage){
+            var config = {
+                action:"upload.php",
+                allowExts:"jpg,gif,png,jpeg"
+                //dragSort:true
+            };
             self.WKimage = new WKimage(self.getAttrVals());
+            self.WKimage.init(config);
         });
     });

@@ -11,7 +11,6 @@ KISSY.add(function (S, Node,Base) {
         var self = this;
         //调用父类构造函数
         WKimage.superclass.constructor.call(self, comConfig);
-        this.initializer();
     };
     WKimage.prototype.tpl = {
         wrap:'<div class="WKeditor_image_plate">\
@@ -434,14 +433,15 @@ KISSY.add(function (S, Node,Base) {
     };
     
     S.extend(WKimage, Base, /** @lends WKeditor.prototype*/{
-        initializer:function(){
+        init:function(config){
             this.ele = this.get("ele");
             this.left = this.get("left");
             this.top = this.get("top");
             this.$wrap = this.get("$wrap");
             this.tool = this.get("tool");
             this.browser = this.tool.browser();
-            this.config = this.get("config");
+            this.config = config;
+            console.log(config);
             this.view();
             this.event();
         }
