@@ -52,14 +52,11 @@ KISSY.add('WKeditor/1.0/index',function (S, Node,Base,XTemplate) {
         };
         this.view.init();
     };
-    WKeditor.prototype.plug = function(config,callback){
+    WKeditor.prototype.plug = function(data,callback){
+
+        
         var self = this;
         var tpl = "<button class='{{name}}' title='{{text}}'></button>";
-        var data = {};
-        for(var name in config){
-            data.name = name;
-            data.text = config[name];
-        }
         var temp = new XTemplate(tpl).render(data);
         self.$plugin.one(".box").append(temp);
         self.plugin.render();
@@ -276,6 +273,7 @@ KISSY.add('WKeditor/1.0/index',function (S, Node,Base,XTemplate) {
     };
     WKeditor.prototype.image = function(config){
         var self = this;
+        console.log(config);
         KISSY.use("WKimage,WKimage.css",function(S,WKimage){
             self.set("config",config);
             self.Wkimage = new WKimage(self.getAttrVals());
