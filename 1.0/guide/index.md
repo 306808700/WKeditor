@@ -46,9 +46,8 @@ WKeditor是一款非常简洁且新颖的富文本编辑器，目前在玩客项
                 allowExts:"jpg,gif,png,jpeg"
                 //dragSort:true
             };
-            self.WKimage = new WKimage(self.getAttrVals());
+            self.WKimage = new WKimage(self.options);
             self.WKimage.init(config);
-            // console.log(self.WKimage) 浏览类结构
         });
     });
 
@@ -65,24 +64,31 @@ WKeditor是一款非常简洁且新颖的富文本编辑器，目前在玩客项
             var config = {
                 setUrl:function(url){
                     /*
-                        视频插入只支持swf格式的链接
                         你可以通过这个方法设置正确的链接。
                     */
                     return url;
                 }
             };
-            self.WKvideo = new WKvideo(self.getAttrVals());
+            self.WKvideo = new WKvideo(self.options);
             self.WKvideo.init(config);
-            // console.log(self.WKvideo) 浏览类结构
         });
     });
 
 ## 配置过滤器
-* 设置编辑器正文允许的标签格式
 
     Editor.reg.fliterReg = "IMG|P|SPAN|FONT|A|UL|LI|DIV|H1|H2|H3|H4|H5|H6|BR|EMBED|EM|VIDEO|B|STRONG|U|LABEL|BIG|S|I|OL|DL|DD|DT|SUB|SUP" 
 
+* 设置编辑器正文允许的标签格式
 * 不在配置里面的标签将会自动过滤删除
 
+
 ## 接口
-* 你可以通过consoloe 打印 Editor 主函数或插件 WKimage, WKvideo 的类结构
+* 你可以通过consoloe 打印 Editor 实例或插件 WKimage , WKvideo 浏览其类结构
+
+## 外观皮肤【style】
+* # WKeditor 父节点
+* .WKeditor_wrap 正文
+* .WKeditor_message 提示文字样式
+* .WKeditor_image_plate 插入图片功能板
+* .WKeditor_font_plate 文本格式按钮功能板
+* .WKeditor_video_plate 插入视频功能板

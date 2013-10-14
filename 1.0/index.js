@@ -10,22 +10,16 @@ gallery/WKeditor/1.0/index
  * @module WKeditor
  **/
 
-KISSY.add('WKeditor/1.0/index',function (S, Node,Base,XTemplate) {
+KISSY.add('WKeditor/1.0/index',function (S, Node,XTemplate) {
     var EMPTY = '';
     var $ = Node.all;
     /**
-     * 
      * @class WKeditor
-     * @constructor
-     * @extends Base
      */
-    function WKeditor(comConfig) {
+    function WKeditor(options) {
 
         var self = this;
-        //调用父类构造函数
-        self.comConfig = comConfig;
-        WKeditor.superclass.constructor.call(self, comConfig);
-        this.initializer();
+        self.options = options;
     }
     WKeditor.prototype.tpl = {
         wrap:$("<div class='WKeditor_wrap'></div>")
@@ -34,15 +28,15 @@ KISSY.add('WKeditor/1.0/index',function (S, Node,Base,XTemplate) {
         var self = this;
         
         this.view.init = function(){
-            self.set("$wrap",$(self.tpl.wrap));
-            self.$wrap = self.get("$wrap");
+            self.options.$wrap = $(self.tpl.wrap);
+            self.$wrap = self.options.$wrap
             self.$wrap.attr("contenteditable",true);
             //self.$wrap.html(self.get("message"));
             self.view.message();
             self.ele.append(self.$wrap);
         };
         this.view.message = function(){
-            self.$message = $(self.get("message"));
+            self.$message = $(self.options.message);
             self.ele.append(self.$message);
             self.$message.on("click",function(){
                 self.$wrap.fire("focus");
@@ -84,7 +78,7 @@ KISSY.add('WKeditor/1.0/index',function (S, Node,Base,XTemplate) {
         this.plugin.event = function(){
             self.$plugin.delegate("click","button",function(e){
                 self.$wrap.fire("focus");
-                self.set("range",self.tool.getRange());
+                self.options.range = self.tool.getRange();
 
                 var name = $(e.target).attr("class");
                 self[name]();
@@ -113,7 +107,7 @@ KISSY.add('WKeditor/1.0/index',function (S, Node,Base,XTemplate) {
                 }   
             })
             .on("mousedown",function(){
-                self.set('range',self.tool.getRange());
+                self.options.range = self.tool.getRange();
             })
             .on("mousemove",function(e){
                 var element = e.target;
@@ -192,7 +186,7 @@ KISSY.add('WKeditor/1.0/index',function (S, Node,Base,XTemplate) {
                             loadingimg.remove();
                         }
                     }
-                    self.tool.setCart(img.parent()[0],self.get("range"));
+                    self.tool.setCart(img.parent()[0],self.options.range);
                     img.remove();
 
                     button.hide();
@@ -248,26 +242,11 @@ KISSY.add('WKeditor/1.0/index',function (S, Node,Base,XTemplate) {
         save:"正在保存...",
         saveSuc:"保存成功"
     };
-    WKeditor.prototype.image = function(config){
-        var self = this;
-        console.log(config);
-        KISSY.use("WKimage,WKimage.css",function(S,WKimage){
-            self.set("config",config);
-            self.Wkimage = new WKimage(self.getAttrVals());
-        });
-    };
-    WKeditor.prototype.video = function(config){
-        var self = this;
-        KISSY.use("WKvideo,WKvideo.css",function(S,WKvideo){
-            self.set("config",config);
-            self.WKvideo = new WKvideo(self.getAttrVals());
-        });
-    };
     WKeditor.prototype.font = function(config){
         var self = this;
         KISSY.use("WKfont,WKfont.css",function(S,WKfont){
-            self.set("config",config);
-            self.WKfont = new WKfont(self.getAttrVals());
+            self.options.config = config;
+            self.WKfont = new WKfont(self.options);
         });
     };
     WKeditor.prototype.tool = function(){
@@ -330,12 +309,12 @@ KISSY.add('WKeditor/1.0/index',function (S, Node,Base,XTemplate) {
             insertArea:function(){
                 var id = +new Date();
                 var $insertArea = $("<div class='insertArea' id='"+id+"'></div>");
-                if(self.tool.removeHTML(self.$wrap.html())==self.tool.removeHTML(self.get("message"))){
+                if(self.tool.removeHTML(self.$wrap.html())==self.tool.removeHTML(self.options.message)){
                     self.$wrap.fire("click");
                     self.$wrap.fire("focus");
-                    self.set("range",self.tool.getRange());
+                    self.options.range = self.tool.getRange();
                 }
-                self.tool.insert($insertArea[0],self.get("range"));
+                self.tool.insert($insertArea[0],self.options.range);
                 self.$message.hide();
                 return $("#"+id);
             },
@@ -640,24 +619,20 @@ KISSY.add('WKeditor/1.0/index',function (S, Node,Base,XTemplate) {
             }
         };
     }
-    S.extend(WKeditor, Base, /** @lends WKeditor.prototype*/{
-        initializer:function(){
-            this.ele = this.get("ele");
-            this.set("left",this.ele.offset().left);
-            this.set("top",this.ele.offset().top);
-            this.left = this.get("left");
-            this.top = this.get("top");
-            this.view();
-            this.event();
-            if(this.get("font")){
-                this.font(this.get("font"));
-            }
-            this.tool = this.tool();
-            this.set("tool",this.tool);
-            this.browser = this.tool.browser();
+    WKeditor.prototype.init = function(){
+        this.ele = this.options.ele;
+        this.options.left = this.ele.offset().left;
+        this.options.top = this.ele.offset().top;
+        this.left = this.options.left;
+        this.top = this.options.top;
+        this.view();
+        this.event();
+        if(this.options.font){
+            this.font(this.options.font);
         }
-    }, {ATTRS : /** @lends WKeditor*/{
-    }});
-
+        this.tool = this.tool();
+        this.options.tool = this.tool
+        this.browser = this.tool.browser();
+    }
     return WKeditor;
-}, {requires:['node', 'base' ,'xtemplate']});
+}, {requires:['node','xtemplate']});

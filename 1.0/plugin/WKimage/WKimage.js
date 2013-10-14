@@ -2,15 +2,11 @@ KISSY.add(function (S, Node,Base) {
     var EMPTY = '';
     var $ = Node.all;
     /**
-     * 
      * @class WKimage
-     * @constructor
-     * @extends Base
      */
-    function WKimage(comConfig){
+    function WKimage(option){
         var self = this;
-        //调用父类构造函数
-        WKimage.superclass.constructor.call(self, comConfig);
+        self.options = option;
     };
     WKimage.prototype.tpl = {
         wrap:'<div class="WKeditor_image_plate">\
@@ -122,7 +118,7 @@ KISSY.add(function (S, Node,Base) {
             });
             self.$insertArea.remove();
             self.$overlay.remove();
-            self.tool.setCart(lastp.one("img")[0],self.get("range"));
+            self.tool.setCart(lastp.one("img")[0],self.options.range);
         };
         self.view.uploadRest = function(){
             self.$image.one(".up_btn").css({
@@ -169,7 +165,6 @@ KISSY.add(function (S, Node,Base) {
                         autoUpload:"true"
                     });
                     if(!self.browser.msie){
-                        console.log(self.$image);
                         self.event.html5Upload(self.$image);
                     }
                     
@@ -205,9 +200,7 @@ KISSY.add(function (S, Node,Base) {
                     });
                     self.$uploader.on("add",function(ev){
                         var target = ev.file.target;
-                       // var space = $("<li class='queue-space'></li>");
-                       // target.before(space);
-                     
+                        
                         target.one(".upload-cancel").on("click",function(){
                             $(this).next().fire("click");
                             self.$uploader.uploadFiles("waiting");
@@ -216,17 +209,16 @@ KISSY.add(function (S, Node,Base) {
                         
                         target.one(".waiting-status").remove();
                         target.addClass("queue-file");
-                        
-                        if(self.get("uploaderkey")){
+                        if(self.options.uploaderkey){
                             return;
                         }
                         self.tool.realign(S.one("#J_UploaderQueue"));
-                        self.set("uploaderkey",setTimeout(function(){
+                        self.options.uploaderkey = setTimeout(function(){
                             self.tool.realign(S.one("#J_UploaderQueue"));
-                            clearTimeout(self.get("uploaderkey"));
-                            self.set("uploaderkey",null);
+                            clearTimeout(self.options.uploaderkey);
+                            self.options.uploaderkey = null
                             self.tool.dragSort(self);
-                        },100));
+                        },100);
                      
                     });
                     self.$uploader.on("success",function(ev){
@@ -431,21 +423,18 @@ KISSY.add(function (S, Node,Base) {
             self.tool.realign($("#J_UploaderQueue"));
         });
     };
-    
-    S.extend(WKimage, Base, /** @lends WKeditor.prototype*/{
-        init:function(config){
-            this.ele = this.get("ele");
-            this.left = this.get("left");
-            this.top = this.get("top");
-            this.$wrap = this.get("$wrap");
-            this.tool = this.get("tool");
-            this.browser = this.tool.browser();
-            this.config = config;
-            console.log(config);
-            this.view();
-            this.event();
-        }
-    }, {ATTRS : /** @lends WKeditor*/{
-    }});
+    WKimage.prototype.init = function(config){
+        this.ele = this.options.ele;
+        this.left = this.options.left;
+        this.top = this.options.top;
+        this.$wrap = this.options.$wrap;
+        this.tool = this.options.tool;
+
+
+        this.browser = this.tool.browser();
+        this.config = config;
+        this.view();
+        this.event();
+    };
     return WKimage;
-}, {requires:['node','base']});
+}, {requires:['node']});
