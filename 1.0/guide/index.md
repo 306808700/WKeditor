@@ -2,7 +2,7 @@
 
 WKeditor是一款非常简洁且新颖的富文本编辑器，目前在玩客项目中使用。
 
-* 版本：1.0
+* 版本：1.1
 * 作者：changyuan.lcy
 * demo：[http://gallery.kissyui.com/WKeditor/1.0/demo/index.html](http://gallery.kissyui.com/WKeditor/1.0/demo/index.html)
 
@@ -17,9 +17,10 @@ WKeditor是一款非常简洁且新颖的富文本编辑器，目前在玩客项
         var Editor = new WKeditor(opt);
     });
 
+* @ele {node} 渲染的节点
 * @message {String} 输入提示
 * @font {Array} 文本操作按钮，默认提供以上列出的5种。
-* @ele {node} 渲染的节点
+
 
 
 ## 配置过滤器
@@ -35,14 +36,14 @@ WKeditor是一款非常简洁且新颖的富文本编辑器，目前在玩客项
 
     Editor.plug(object function);
 
-* @param {object} 会根据name 和 text 生成一个button 按钮
+* @param {object} 会根据name、title、value 生成一个button 按钮
 * @param {function} 按钮点击触发所执行的函数
 
 
 ## 自定义插件
     
     // 你可以通过.my 去设置按钮样式
-    Editor.plug({name:"my",title:"我的插件",value:"模"},function(){
+    Editor.plug({name:"my",title:"插入模版",value:"模"},function(){
         // console.log(Editor);
     });
 
@@ -88,7 +89,7 @@ WKeditor是一款非常简洁且新颖的富文本编辑器，目前在玩客项
 
 * 获取光标位置 Editor.tool.getRange();
 * 光标位置插入 Editor.tool.inser(dom,range); // range 参数可以为空表示当前焦点位置;
-* 更多接口你可以console.log(Editor) 去查看
+* 更多接口可以console.log(Editor)  查看
 
 ## 外观皮肤【style】
 *  id#WKeditor 父节点
