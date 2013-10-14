@@ -6,13 +6,12 @@ KISSY.add(function (S, Node,Base) {
     /**
      * 
      * @class WKvideo
-     * @constructor
-     * @extends Base
      */
-    function WKvideo(comConfig){
+    function WKvideo(options){
         var self = this;
-        //调用父类构造函数
-        WKvideo.superclass.constructor.call(self, comConfig);
+        
+        // 继承父类属性
+        self.options = options
     };
     WKvideo.prototype.tpl = {
         wrap:'<div class="WKeditor_video_plate">\
@@ -72,7 +71,7 @@ KISSY.add(function (S, Node,Base) {
                 self.$insertArea.remove();
                 self.$overlay.remove();
                 self.$video.remove();
-                self.tool.setCart(p[0],self.get("range"));
+                self.tool.setCart(p[0],self.options.range);
             }
             if(self.config.setUrl){
                 doit(self.config.setUrl(url));
@@ -101,19 +100,16 @@ KISSY.add(function (S, Node,Base) {
             self.$wrap.fire("blur");
         });
     };
-    S.extend(WKvideo, Base, /** @lends WKeditor.prototype*/{
-        init:function(config){
-            this.ele = this.get("ele");
-            this.left = this.get("left");
-            this.top = this.get("top");
-            this.$wrap = this.get("$wrap");
-            this.tool = this.get("tool");
-            this.browser = this.tool.browser();
-            this.config = config;
-            this.view();
-            this.event();
-        }
-    }, {ATTRS : /** @lends WKeditor*/{
-    }});
+    WKvideo.prototype.init = function(config){
+        this.ele = this.options.ele;
+        this.left = this.options.left;
+        this.top = this.options.top;
+        this.$wrap = this.options.$wrap;
+        this.tool = this.options.tool;
+        this.browser = this.tool.browser();
+        this.config = config;
+        this.view();
+        this.event();
+    };
     return WKvideo;
-}, {requires:['node','base']});
+}, {requires:['node']});

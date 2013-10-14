@@ -5,7 +5,7 @@
     <title>WKeditor 1.0</title>
     <script src="http://g.tbcdn.cn/kissy/k/1.3.0/kissy-min.js" charset="utf-8"></script>
     <link rel="stylesheet" href="http://g.tbcdn.cn/kissy/k/1.3.0/css/dpl/base-min.css">
-
+    <link rel="stylesheet" href="../index.css">
 </head>
 <body>
 <style type="text/css">
@@ -36,10 +36,17 @@
         text-align: center;
 
     }
+    .top{
+        background:#336699;padding:20px;color:#fff;
+    }
+    .top .bb{
+        width:800px;margin:auto
+    }
 </style>
-    <link rel="stylesheet" href="../index.css">
-<h2 style="background:#336699;padding:20px;color:#fff;">
-    <div style="width:800px;margin:auto">WKeditor 1.0</div></h2>
+
+<h2 class="top">
+    <div class="bb">WKeditor 1.0</div>
+</h2>
 
 <div id="wankePost">
     <div class='title'>标题</div>    
@@ -88,23 +95,23 @@
     }
 
     S.use('WKeditor/1.0/index,', function (S, WKeditor) {
-        var comConfig = {
-            message:'<div class="message"><h3>请输入正文</h3><p>小提示：<br>\
+        var options = {
+            message:'<div class="WKeditor_message"><h3>请输入正文</h3><p>小提示：<br>\
                 1. 鼠标选中已输入文字可修改文字样式。<br>\
                 2. 支持粘帖截图。<br>\
                 3. 移动到未居中的图片上出现居中按钮。<br></div>',
-            plugin:{
-                font:[
-                    "hugeFont","largeFont","normalFont","strongFont","listText"
-                ],
-                image:{
-                    action:"upload.php"
-                }
-            },
+            font:[
+                "hugeFont","largeFont","normalFont","strongFont","listText"
+            ],
             ele:S.one("#WKeditor")
         }
-        var Editor = new WKeditor(comConfig);
+        var Editor = new WKeditor(options);
+        Editor.init();
 
+
+        /*
+            扩展插件
+        */
         Editor.plug({
             name:"video",
             text:"插入视频"
@@ -112,21 +119,21 @@
             var self = this;
             KISSY.use("WKvideo,WKvideo.css",function(S,WKvideo){
                 var config = {
-                    setUrl:function(){
-                        var url;
+                    setUrl:function(url){
                         /*
-                            视频插入只支持swf格式的链接
                             你可以通过这个方法设置正确的链接。
                         */
                         return url;
                     }
                 };
-                self.WKvideo = new WKvideo(self.getAttrVals());
+                self.WKvideo = new WKvideo(self.options);
                 self.WKvideo.init(config);
             });
         });
         
         /*
+            扩展插件
+        */
         Editor.plug({
             name:"image",
             text:"插入图片"
@@ -138,11 +145,10 @@
                     allowExts:"jpg,gif,png,jpeg"
                     //dragSort:true
                 };
-                self.WKimage = new WKimage(self.getAttrVals());
+                self.WKimage = new WKimage(self.options);
                 self.WKimage.init(config);
             });
         });
-       */
     });
     
 
