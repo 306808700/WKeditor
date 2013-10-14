@@ -9,14 +9,12 @@ WKeditor是一款非常简洁且新颖的富文本编辑器，目前在玩客项
 ## 初始化组件
 
     S.use('WKeditor/1.0/index,', function (S, WKeditor) {
-        var comConfig = {
-            message:'<div class="message">输入提示</div>',
-            font:[
-                "hugeFont","largeFont","normalFont","strongFont","listText"
-            ],
-            ele:S.one("#WKeditor")
-        }
-        var Editor = new WKeditor(comConfig);
+        var opt = {
+            message: '<div class="message">输入提示</div>',
+            font: ["hugeFont", "largeFont", "normalFont", "strongFont", "listText"],
+            ele: S.one("#WKeditor")
+        };
+        var Editor = new WKeditor(opt);
     });
 
 ## API说明
@@ -25,12 +23,11 @@ WKeditor是一款非常简洁且新颖的富文本编辑器，目前在玩客项
 * @ele {node} 渲染的节点
 
 ## 插件调用
-* @param {object} 会根据name 和 text 生成一个button 按钮
-* @param {function} 按钮点击触发所执行的函数
-
-## 调用规范
 
     Editor.plug(object function);
+
+* @param {object} 会根据name 和 text 生成一个button 按钮
+* @param {function} 按钮点击触发所执行的函数
 
 
 ##  使用插件【图片上传】
@@ -75,10 +72,12 @@ WKeditor是一款非常简洁且新颖的富文本编辑器，目前在玩客项
     });
 
 ## 配置过滤器
-
+    
+    // 默认配置
     Editor.reg.fliterReg = "IMG|P|SPAN|FONT|A|UL|LI|DIV|H1|H2|H3|H4|H5|H6|BR|EMBED|EM|VIDEO|B|STRONG|U|LABEL|BIG|S|I|OL|DL|DD|DT|SUB|SUP" 
 
 * 设置编辑器正文允许的标签格式
+* 当你粘帖web word text 或者其他软件的文本进编辑器时候。
 * 不在配置里面的标签将会自动过滤删除
 
 
@@ -86,7 +85,7 @@ WKeditor是一款非常简洁且新颖的富文本编辑器，目前在玩客项
 * 你可以通过consoloe 打印 Editor 实例或插件 WKimage , WKvideo 浏览其类结构
 
 ## 外观皮肤【style】
-* # WKeditor 父节点
+*  id#WKeditor 父节点
 * .WKeditor_wrap 正文
 * .WKeditor_message 提示文字样式
 * .WKeditor_image_plate 插入图片功能板
