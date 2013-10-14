@@ -55,21 +55,17 @@
 		left: 2px;
 		top: 3px;
 	}
-	.WKeditor_plugin .image{
-		background-position: -61px -74px;
-	}
-	.WKeditor_plugin .video{
-		background-position: -61px -44px
-	}
+	
 	.WKeditor_plugin button{
 		display: block;
-		width: 24px;
+		width: 22px;
 		height: 27px;
-		background-color: #d1d1d1;
+		background-color: #333;
 		cursor: pointer;
 		margin-bottom: 4px;
 		border: 0;
-		background: url(http://img04.taobaocdn.com/tps/i4/T1.AJiFj8dXXXBqKDv-150-117.png)
+		padding: 2px;
+		color: #fff;
 	}
 
 	
@@ -149,3 +145,14 @@
 	.btn-bg-blue {
 	    background-color: #3a87ef;
 	}
+
+
+/* 插件 图标按钮样式放置位置 */
+.WKeditor_plugin .image{
+	background: url(http://img04.taobaocdn.com/tps/i4/T1.AJiFj8dXXXBqKDv-150-117.png);
+	background-position: -61px -74px;
+}
+.WKeditor_plugin .video{
+	background: url(http://img04.taobaocdn.com/tps/i4/T1.AJiFj8dXXXBqKDv-150-117.png);
+	background-position: -61px -44px
+}

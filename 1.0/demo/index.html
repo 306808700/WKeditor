@@ -42,6 +42,10 @@
     .top .bb{
         width:800px;margin:auto
     }
+    .my{
+        font-size: 18px;
+        font-weight: bold;
+    }
 </style>
 
 <h2 class="top">
@@ -107,15 +111,12 @@
         }
         var Editor = new WKeditor(options);
         Editor.init();
-
+        console.log(Editor);
 
         /*
-            扩展插件
+            官方插件
         */
-        Editor.plug({
-            name:"video",
-            text:"插入视频"
-        },function(){
+        Editor.plug({name:"video",title:"插入视频"},function(){
             var self = this;
             KISSY.use("WKvideo,WKvideo.css",function(S,WKvideo){
                 var config = {
@@ -128,14 +129,10 @@
                 self.WKvideo.init(config);
             });
         });
-        
         /*
-            扩展插件
+            官方插件
         */
-        Editor.plug({
-            name:"image",
-            text:"插入图片"
-        },function(){
+        Editor.plug({name:"image",title:"插入图片"},function(){
             var self = this;
             KISSY.use("WKimage,WKimage.css",function(S,WKimage){
                 var config = {
@@ -146,6 +143,15 @@
                 self.WKimage = new WKimage(self.options);
                 self.WKimage.init(config);
             });
+        });
+
+        /*
+            自定义插件
+        */
+        Editor.plug({name:"my",title:"我还没有名字",value:"模"},function(){
+            var self = this;
+            self.$wrap.fire("click");
+            self.tool.insert(S.one("<div><b><font size='4'>模版</font></b><p>自定义模版</p></div>")[0],self.tool.getRange());
         });
     });
     
