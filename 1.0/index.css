@@ -6,7 +6,7 @@
 		position: relative;
 		padding: 15px;
 	}
-	#WKeditor .message{
+	#WKeditor .WKeditor_message{
 		color: #aaa;
 		font-size: 14px;
 		line-height: 22px;
@@ -14,7 +14,7 @@
 		top: 20px;
 		left: 20px;
 	}
-	#WKeditor .message h3{
+	#WKeditor .WKeditor_message h3{
 		padding: 0px;
 		margin: 0px;
 		font-weight: normal;

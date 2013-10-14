@@ -50,7 +50,7 @@
 	    padding:10px;
 	    height: auto;
 	}
-	.WKeditor_image_plate .box{
+	.WKeditor_image_plate .WK_box{
 	    /*position: absolute;*/
 	    clear: both;
 	    text-align: center;
@@ -133,7 +133,7 @@
 	    clear: both;
 	    overflow: hidden;
 	}
-	.WKeditor_image_plate p.text{
+	.WKeditor_image_plate p.WK_text{
 		color: #666;
 	}
 	.WKeditor_image_plate .defaultTheme-button{

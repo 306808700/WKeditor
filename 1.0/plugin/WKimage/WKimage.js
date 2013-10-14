@@ -13,11 +13,11 @@ KISSY.add(function (S, Node,Base) {
             <div class="uploadBox">\
                 <p class="canDragMsg">（拖拽图片可修改顺序）</p>\
                 <ul id="J_UploaderQueue" class="grid"></ul>\
-                <div class="box">\
-                    <p class="top">可拖动多张本地图片到这里上传<br/>或</p>\
+                <div class="WK_box">\
+                    <p class="WK_top">可拖动多张本地图片到这里上传<br/>或</p>\
                     <div class="up_btn"><input type="file" class="g-u" id="J_UploaderBtn" value="选择文件" name="Filedata" >\
                     <a class="btn-confirm wk-btn btn-bg-blue btn-large">确认插入</a></div>\
-                    <p class="text">Jpg，Gif，PNG,单张最大6M</br>图片尺寸超过480*270像素可以在首页展示缩略图</p>\
+                    <p class="WK_text">Jpg，Gif，PNG,单张最大6M</br>图片尺寸超过480*270像素可以在首页展示缩略图</p>\
                 </div>\
             </div><div class="close">×</div>\
         </div>'
@@ -200,7 +200,7 @@ KISSY.add(function (S, Node,Base) {
                     });
                     self.$uploader.on("add",function(ev){
                         var target = ev.file.target;
-                        
+
                         target.one(".upload-cancel").on("click",function(){
                             $(this).next().fire("click");
                             self.$uploader.uploadFiles("waiting");
