@@ -49,7 +49,7 @@ KISSY.add('WKeditor/1.0/index',function (S, Node,XTemplate) {
     WKeditor.prototype.plug = function(data,callback){
         var self = this;
         self.plugin();
-        var tpl = "<button class='{{name}}' title='{{text}}'></button>";
+        var tpl = "<button class='{{name}}' title='{{title}}'>{{value}}</button>";
         var temp = new XTemplate(tpl).render(data);
         self.$plugin.one(".box").append(temp);
         self.plugin.render();
@@ -597,6 +597,7 @@ KISSY.add('WKeditor/1.0/index',function (S, Node,XTemplate) {
             },
             //插入到光标位置
             insert:function(dom,range){
+                range = range||this.tool.getRange();
                 var selection = this.getSelection();
                 if (!window.getSelection || (self.browser.msie && parseInt(self.browser.version)<9)){
                     range.pasteHTML(dom.outerHTML);
