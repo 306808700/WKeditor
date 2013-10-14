@@ -93,14 +93,9 @@
                 1. 鼠标选中已输入文字可修改文字样式。<br>\
                 2. 支持粘帖截图。<br>\
                 3. 移动到未居中的图片上出现居中按钮。<br></div>',
-            plugin:{
-                font:[
-                    "hugeFont","largeFont","normalFont","strongFont","listText"
-                ],
-                image:{
-                    action:"upload.php"
-                }
-            },
+            font:[
+                "hugeFont","largeFont","normalFont","strongFont","listText"
+            ],
             ele:S.one("#WKeditor")
         }
         var Editor = new WKeditor(comConfig);
@@ -126,7 +121,7 @@
             });
         });
         
-        /*
+       
         Editor.plug({
             name:"image",
             text:"插入图片"
@@ -142,7 +137,6 @@
                 self.WKimage.init(config);
             });
         });
-       */
     });
     
 

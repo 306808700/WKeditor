@@ -53,9 +53,8 @@ KISSY.add('WKeditor/1.0/index',function (S, Node,Base,XTemplate) {
         this.view.init();
     };
     WKeditor.prototype.plug = function(data,callback){
-
-        
         var self = this;
+        self.plugin();
         var tpl = "<button class='{{name}}' title='{{text}}'></button>";
         var temp = new XTemplate(tpl).render(data);
         self.$plugin.one(".box").append(temp);
@@ -65,41 +64,19 @@ KISSY.add('WKeditor/1.0/index',function (S, Node,Base,XTemplate) {
     WKeditor.prototype.plugin = function(config){
         var self = this;
         this.plugin.tpl = {
-            plugin:{
-                product:"插入产品",
-                video:"插入视频",
-                image:"插入图片"
-            },
-            wrap:"<div class='WKeditor_plugin'></div>",
-            btn:"<div class='box'>{{#each data}}<button class='{{name}}' title='{{text}}'></button>{{/each}}</div>",
+            wrap:"<div class='WKeditor_plugin'><div class='box'></div></div>",
             arrow:"<div class='arrow-outer'><div class='arrow-shadow'></div></div>"
         };
         this.plugin.init = function(){
+            if(self.$plugin){
+                return;
+            }
             self.plugin.view();
             self.plugin.event();
         };
         this.plugin.view = function(){
-            
             self.$plugin = $(self.plugin.tpl.wrap);
-
-            var arr = [],
-                temp = "",
-                i = 0;
-            
-            for(var name in config){
-                if(self.plugin.tpl.plugin[name]){
-                    arr[i] = {
-                        name:name,
-                        text:self.plugin.tpl.plugin[name]
-                    };
-                    i++;
-                }
-            }
-            temp = new XTemplate(self.plugin.tpl.btn).render({data:arr});
-            self.$plugin.append(temp);
-            
             self.$plugin.append(self.plugin.tpl.arrow);
-            
             self.ele.append(self.$plugin);
             self.plugin.render();
         };
@@ -672,11 +649,8 @@ KISSY.add('WKeditor/1.0/index',function (S, Node,Base,XTemplate) {
             this.top = this.get("top");
             this.view();
             this.event();
-            if(this.get("plugin")){
-                this.plugin(this.get("plugin"));
-            }
-            if(this.get("plugin").font){
-                this.font(this.get("plugin").font);
+            if(this.get("font")){
+                this.font(this.get("font"));
             }
             this.tool = this.tool();
             this.set("tool",this.tool);
