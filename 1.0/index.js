@@ -148,7 +148,7 @@ KISSY.add('WKeditor/1.0/index',function (S, Node,XTemplate,WKfont) {
                         });
                         self.tool.formatBlock();
                     },10);
-                    
+
                 }
             })[0]
             .onpaste = function(e){
@@ -559,7 +559,6 @@ KISSY.add('WKeditor/1.0/index',function (S, Node,XTemplate,WKfont) {
                 return object;
             },
             formatBlock:function(self){
-                console.log(123);
                 document.execCommand('FormatBlock',false,'p');
                 document.execCommand("RemoveFormat");
             },
@@ -586,11 +585,11 @@ KISSY.add('WKeditor/1.0/index',function (S, Node,XTemplate,WKfont) {
                             range = this.getSelection().createRange ? this.getSelection().createRange() : this.getSelection().getRangeAt(0);
                         },1);
                     }
-                    if(range.text){
+                    if(range&&range.text){
                         range.selectText = range.text
                     }
 
-                    if(range.toString){
+                    if(range&&range.toString){
                         range.selectText = range.toString();
                     }
                     
