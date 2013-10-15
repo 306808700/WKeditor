@@ -61,10 +61,27 @@
     .list_color button:hover{
         background: #141414;
     }
+    .config{
+        width: 800px;
+        margin: auto;
+        background: #ccc;
+        margin-bottom: 20px;
+    }
+    .config label{
+        margin-right: 10px;
+    }
+    .link{
+        float: right;
+        color: #ccc;
+    }
+    .link:hover{
+        color: #fff;
+    }
 </style>
 
 <h2 class="top">
-    <div class="bb">WKeditor 1.2</div>
+    <div class="bb">WKeditor 1.2 <a class="link" href="http://gallery.kissyui.com/WKeditor/1.0/guide/index.html" target="_blank">API：http://gallery.kissyui.com/WKeditor/1.0/guide/index.html</a></div>
+
 </h2>
 
 <div id="wankePost">
@@ -73,6 +90,7 @@
 </div>
 <div class="copyright">14707 @核心</div>
 <script>
+    
     var S = KISSY;
     S.Config.debug = true;
     if (S.Config.debug) {
@@ -142,15 +160,22 @@
             var set = function(color){
                 document.execCommand('ForeColor',false,color);
             };
+            var buttons = $list.all("button");
+            /*
+            S.each(buttons,function(dom){
+                var color = $(dom).attr('color');
+                $(dom).css("background",color);
+            });
+            */ 
             $list.css({
                 position:"absolute",
                 top:that.offset().top-that.parent().parent().offset().top+30,
                 left:that.offset().left-that.parent().parent().offset().left
             });
             $list.animate({
-                height:$list.all("button").length*32
+                height:buttons.length*32
             },1/4);
-            $list.all("button").on("click",function(){
+            buttons.on("click",function(){
                 set($(this).attr("color"));
                 $list.remove();
             });
