@@ -35,14 +35,20 @@ WKeditor是一款非常简洁且新颖的富文本编辑器，目前在玩客项
 * 当你粘帖web word text 或者其他软件的文本进编辑器时候。
 * 不在配置里面的标签将会自动过滤删除
 
-## 插件
 
+## 自定义扩展 
+    
+    // 文本格式扩展
+    Editor.addFont(object function);
+
+    // 插入板扩展
     Editor.plug(object function);
 
 * @param {object} 会根据name、title、value 生成一个button 按钮
 * @param {function} 按钮点击触发所执行的函数
 
-## 自定义文本格式命令
+
+## 自定义文本格式 实例
     
     // @设置红色
     // 你可以通过.ForeColor 设置样式
@@ -52,7 +58,7 @@ WKeditor是一款非常简洁且新颖的富文本编辑器，目前在玩客项
 
 *你可以自定义多个文本格式命令，以符合自身项目需求。
 
-## 自定义插件
+## 自定义插件 实例
     
     // 你可以通过.my 去设置按钮样式
     Editor.plug({name:"my",title:"插入模版",value:"模"},function(){
@@ -79,7 +85,6 @@ WKeditor是一款非常简洁且新颖的富文本编辑器，目前在玩客项
 * action 后端接口地址
 * allowExts 允许的格式
 * multiple 默认多选
-* dragSort 默认可以对预览图拖拽排序
 
 
 ##  官方插件【视频插入】
@@ -120,4 +125,3 @@ WKeditor是一款非常简洁且新颖的富文本编辑器，目前在玩客项
 
 
 ## 更多功能需求，请在github 提问，或者直接旺旺【核心】。
-* 

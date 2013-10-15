@@ -25,7 +25,7 @@ KISSY.add(function (S, Node,XTemplate) {
                 command:"setFontSize"
             },
             normalFont:{
-                text:"正常字体",
+                text:"还原字体",
                 size:"2",
                 command:"setFontSize"
             },
