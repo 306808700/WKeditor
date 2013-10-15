@@ -29,7 +29,7 @@ KISSY.add(function (S, Node,Base) {
 
         self.view.setImagePlatePosition = function(){
             self.$image.width(self.ele.width()).show();
-            var top = ($(window).height()-self.$image.outerHeight())/2;
+            var top = ($(window).height()-self.$image.outerHeight())/2+$(window).scrollTop();
             var left = ($(window).width()-self.$image.width())/2;
             if(top<0){
                 top = 5;
@@ -145,7 +145,7 @@ KISSY.add(function (S, Node,Base) {
                     
 
                     S.all('#J_uploadTemp').fire('focus').hide();
-                    var multiple = "true";
+                    var multiple = self.config.multiple|| true;
 
                     var type = "flash";
                     if(self.browser.mozilla||self.browser.safari||self.browser.chrome){

@@ -1,4 +1,4 @@
-KISSY.add(function (S, Node,Base,XTemplate) {
+KISSY.add(function (S, Node,XTemplate) {
     var EMPTY = '';
     var $ = Node.all;
     /**
@@ -7,11 +7,9 @@ KISSY.add(function (S, Node,Base,XTemplate) {
      * @constructor
      * @extends Base
      */
-    function WKfont(comConfig){
+    function WKfont(options){
         var self = this;
-        //调用父类构造函数
-        WKfont.superclass.constructor.call(self, comConfig);
-        this.initializer();
+        self.options = options;
     };
 
     WKfont.prototype.tpl = {
@@ -51,23 +49,28 @@ KISSY.add(function (S, Node,Base,XTemplate) {
 
     WKfont.prototype.view = function(){
         var self = this;
+        self.view.render = function(){
+            self.$font.width(self.$font.all("button").length*32);
+        };
         self.$font = $(self.tpl.wrap),
             arr = [],
             temp = "";
-
-        for(var i=0,len=self.config.length;i<len;i++){
-            arr[i] = {
-                name:self.config[i],
-                command:self.tpl.font[self.config[i]].command,
-                size:self.tpl.font[self.config[i]].size,
-                text:self.tpl.font[self.config[i]].text
-            };
+        if(self.config){     
+            for(var i=0,len=self.config.length;i<len;i++){
+                arr[i] = {
+                    name:self.config[i],
+                    command:self.tpl.font[self.config[i]].command,
+                    size:self.tpl.font[self.config[i]].size,
+                    text:self.tpl.font[self.config[i]].text
+                };
+            }
         }
         temp = new XTemplate(self.tpl.btn).render({data:arr})
         self.$font.append(temp);
         self.$font.append(self.tpl.arrow);
-        self.$font.width(self.$font.all("button").length*32);
-
+        
+        
+        self.view.render();
         self.ele.append(self.$font);
     };
 
@@ -83,28 +86,28 @@ KISSY.add(function (S, Node,Base,XTemplate) {
             return false;
         });
         self.$wrap.on("mousedown",function(e){
-            self.set("mousedown",true);
-            self.set("mouseOD",{
+            self.options.mousedown = true;
+            self.options.mouseOD = {
                 left:e.clientX,
                 top:e.clientY+$(window).scrollTop()
-            });
+            };
             self.$font.hide();
-            if(self.get("range")){
-                self.tool.setCart(self.$wrap[0],self.get("range"));
+            if(self.options.range){
+                self.tool.setCart(self.$wrap[0],self.options.range);
             }
             self.$wrap.fire('click');
         })
 
         .on("mouseup",function(e){
-            self.set("mouseOU",{
+            self.options.mouseOU = {
                 left:e.clientX,
                 top:e.clientY+$(window).scrollTop()
-            });
-            self.set("mousedown",false);
+            };
+            self.options.mousedown = false;
 
             var range = self.tool.getRange();
-            var l =  self.get("mouseOD").left-(self.get("mouseOD").left-self.get("mouseOU").left)/2-self.$font.width()/2;
-            var t =  self.get("mouseOD").top-(self.get("mouseOD").top-self.get("mouseOU").top)/2-self.$font.height()-20;
+            var l =  self.options.mouseOD.left-(self.options.mouseOD.left-self.options.mouseOU.left)/2-self.$font.width()/2;
+            var t =  self.options.mouseOD.top-(self.options.mouseOD.top-self.options.mouseOU.top)/2-self.$font.height()-20;
     
 
 
@@ -120,7 +123,7 @@ KISSY.add(function (S, Node,Base,XTemplate) {
             if(t>(self.ele.offset().top+self.ele.height())){
                 t = self.ele.offset().top+self.ele.height()-self.$font.height()-10;
             }
-            self.set("range",range);
+            self.options.range = range;
             setTimeout(function(){
                 try{
                     if(range.selectText){
@@ -136,12 +139,12 @@ KISSY.add(function (S, Node,Base,XTemplate) {
             },1);
         });
         $(document).on("mouseup",function(e){
-            if(self.get("mousedown")){
+            if(self.options.mousedown){
                 self.$wrap.fire("mouseup",e);
-                self.set("mouseOU",{
+                self.options.mouseOU = {
                     left:e.clientX,
                     top:e.clientY+$(window).scrollTop()
-                });
+                };
             }else if(S.inArray(e.target,self.$font.all("button"))){
             }else{
                 self.$font.hide();
@@ -184,20 +187,17 @@ KISSY.add(function (S, Node,Base,XTemplate) {
         insertUnorderedList:function(){
             document.execCommand('InsertUnorderedList',false,null);
         }
-    }
-    S.extend(WKfont, Base, /** @lends WKeditor.prototype*/{
-        initializer:function(){
-            this.ele = this.get("ele");
-            this.left = this.get("left");
-            this.top = this.get("top");
-            this.$wrap = this.get("$wrap");
-            this.config = this.get("config");
-            this.tool = this.get("tool");
-            this.browser = this.tool.browser();
-            this.view();
-            this.event();
-        }
-    }, {ATTRS : /** @lends WKeditor*/{
-    }});
+    };
+    WKfont.prototype.init = function(config){
+        this.ele = this.options.ele;
+        this.left = this.options.left;
+        this.top = this.options.top;
+        this.$wrap = this.options.$wrap;
+        this.config = config;
+        this.tool = this.options.tool;
+        this.browser = this.tool.browser();
+        this.view();
+        this.event();
+    };
     return WKfont;
-}, {requires:['node','base','xtemplate']});
+}, {requires:['node','xtemplate','WKfont.css']});

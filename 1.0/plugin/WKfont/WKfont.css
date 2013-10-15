@@ -11,6 +11,14 @@
 	    -moz-box-shadow: #666 0px 2px 4px;
 	    box-shadow: #666 0px 2px 4px;
 	}
+	.WKeditor_font_plate button{
+		background: #333;
+		font-size: 16px;
+		color: #fff;
+		border: 0;
+		font-family: "微软雅黑";
+
+	}
 	.WKeditor_font_plate .command {
 		width: 32px;
 		height: 32px;
@@ -26,19 +34,19 @@
 	    background-color: #141414;
 	}
 	.WKeditor_font_plate .command.hugeFont{
-	    background-position: 0 -5px;
+	    background-position: 0 -4px;
 	}
 	.WKeditor_font_plate .command.largeFont{
-	    background-position: -32px -5px;
+	    background-position: -32px -4px;
 	}
 	.WKeditor_font_plate .command.normalFont{
-	    background-position: -64px -5px;
+	    background-position: -64px -4px;
 	}
 	.WKeditor_font_plate .command.strongFont{
-	    background-position: -96px -5px;
+	    background-position: -96px -4px;
 	}
 	.WKeditor_font_plate .command.listText{
-	    background-position: -128px -5px;
+	    background-position: -128px -4px;
 	}
 	.WKeditor_font_plate .arrow{
 	    width:9px;

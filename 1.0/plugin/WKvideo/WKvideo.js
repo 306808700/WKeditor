@@ -28,7 +28,7 @@ KISSY.add(function (S, Node,Base) {
 
         self.view.setVideoPlatePosition = function(){
             self.$video.width(self.ele.width()).show();
-            var top = ($(window).height()-self.$video.outerHeight())/2;
+            var top = ($(window).height()-self.$video.outerHeight())/2+$(window).scrollTop();
             var left = ($(window).width()-self.$video.width())/2;
             if(top<0){
                 top = 5;
@@ -99,6 +99,7 @@ KISSY.add(function (S, Node,Base) {
             self.$insertArea.remove();
             self.$wrap.fire("blur");
         });
+        self.$video.one("input").fire("focus");
     };
     WKvideo.prototype.init = function(config){
         this.ele = this.options.ele;

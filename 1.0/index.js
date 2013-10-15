@@ -10,7 +10,7 @@ gallery/WKeditor/1.0/index
  * @module WKeditor
  **/
 
-KISSY.add('WKeditor/1.0/index',function (S, Node,XTemplate) {
+KISSY.add('WKeditor/1.0/index',function (S, Node,XTemplate,WKfont) {
     var EMPTY = '';
     var $ = Node.all;
     /**
@@ -46,6 +46,21 @@ KISSY.add('WKeditor/1.0/index',function (S, Node,XTemplate) {
         };
         this.view.init();
     };
+    // 扩展文本格式接口
+    WKeditor.prototype.addFont = function(data,callback){
+        var self = this;
+        var tpl = "<button command='{{command}}' class='{{name}} command' title='{{title}}' >{{value}}</button>";
+        var temp = new XTemplate(tpl).render(data);
+        self.WKfont.$font.one(".box").append(temp);
+        self.WKfont.view.render();
+        var buttons = self.WKfont.$font.all("button");
+        var len = buttons.length;
+        var last = $(buttons[len-1]);
+        last.on("click",function(e){
+            callback(e);
+        });
+    };
+    // 扩展插件接口
     WKeditor.prototype.plug = function(data,callback){
         var self = this;
         self.plugin();
@@ -107,6 +122,7 @@ KISSY.add('WKeditor/1.0/index',function (S, Node,XTemplate) {
                 }   
             })
             .on("mousedown",function(){
+                self.$message.hide();
                 self.options.range = self.tool.getRange();
             })
             .on("mousemove",function(e){
@@ -130,8 +146,9 @@ KISSY.add('WKeditor/1.0/index',function (S, Node,XTemplate) {
                                  $(dom).removeAttr("class").removeAttr("style");
                             } 
                         });
-                        self.tool.formatBlock(self);
+                        self.tool.formatBlock();
                     },10);
+                    
                 }
             })[0]
             .onpaste = function(e){
@@ -244,10 +261,8 @@ KISSY.add('WKeditor/1.0/index',function (S, Node,XTemplate) {
     };
     WKeditor.prototype.font = function(config){
         var self = this;
-        KISSY.use("WKfont,WKfont.css",function(S,WKfont){
-            self.options.config = config;
-            self.WKfont = new WKfont(self.options);
-        });
+        self.WKfont = new WKfont(self.options);
+        self.WKfont.init(config);
     };
     WKeditor.prototype.tool = function(){
         var self = this;
@@ -292,14 +307,6 @@ KISSY.add('WKeditor/1.0/index',function (S, Node,XTemplate) {
                         if(!S.inArray(name,FLITER_REG.split("|"))){
                             $(this).remove();
                         }
-                        /*
-                        if(name=="IMG"){
-                            var newImg = $(this).clone();
-                            newImg.removeAttr("setdragg");
-                            $(this).after(newImg);
-                            $(this).remove();
-                        }
-                        */
                         if(index==len-1){
                             theNextReplace();
                         }
@@ -552,6 +559,7 @@ KISSY.add('WKeditor/1.0/index',function (S, Node,XTemplate) {
                 return object;
             },
             formatBlock:function(self){
+                console.log(123);
                 document.execCommand('FormatBlock',false,'p');
                 document.execCommand("RemoveFormat");
             },
@@ -571,7 +579,13 @@ KISSY.add('WKeditor/1.0/index',function (S, Node,XTemplate) {
             },
             getRange:function(){
                 var range;
-                    range = this.getSelection().createRange ? this.getSelection().createRange() : this.getSelection().getRangeAt(0);
+                    try{
+                        range = this.getSelection().createRange ? this.getSelection().createRange() : this.getSelection().getRangeAt(0);
+                    }catch(e){
+                        setTimeout(function(){
+                            range = this.getSelection().createRange ? this.getSelection().createRange() : this.getSelection().getRangeAt(0);
+                        },1);
+                    }
                     if(range.text){
                         range.selectText = range.text
                     }
@@ -585,14 +599,18 @@ KISSY.add('WKeditor/1.0/index',function (S, Node,XTemplate) {
             },
             //设置光标位置
             setCart:function(dom,range) {
-                if(document.selection&&parseInt(self.browser.version)<9){
-                    range.collapse(false);
-                    range.select();
-                }else{
-                    range.setStartAfter(dom);
-                    range.collapse(true);
-                    this.getSelection().removeAllRanges();
-                    this.getSelection().addRange(range);
+                try{
+                    if(document.selection&&parseInt(self.browser.version)<9){
+                        range.collapse(false);
+                        range.select();
+                    }else{
+                        range.setStartAfter(dom);
+                        range.collapse(true);
+                        this.getSelection().removeAllRanges();
+                        this.getSelection().addRange(range);
+                    }
+                }catch(e){
+
                 }
             },
             //插入到光标位置
@@ -622,18 +640,16 @@ KISSY.add('WKeditor/1.0/index',function (S, Node,XTemplate) {
     }
     WKeditor.prototype.init = function(){
         this.ele = this.options.ele;
-        this.options.left = this.ele.offset().left;
-        this.options.top = this.ele.offset().top;
-        this.left = this.options.left;
-        this.top = this.options.top;
+        this.left = this.options.left  = this.ele.offset().left;
+        this.top = this.options.top  = this.ele.offset().top;
+        this.tool = this.options.tool  = this.tool();
+
         this.view();
         this.event();
-        if(this.options.font){
-            this.font(this.options.font);
-        }
-        this.tool = this.tool();
-        this.options.tool = this.tool
+        
+        this.font(this.options.font);
+        
         this.browser = this.tool.browser();
     }
     return WKeditor;
-}, {requires:['node','xtemplate']});
+}, {requires:['node','xtemplate','WKfont']});

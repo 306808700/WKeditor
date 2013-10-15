@@ -66,6 +66,11 @@
 		border: 0;
 		padding: 2px;
 		color: #fff;
+		font-size: 14px;
+		font-family: "微软雅黑";
+	}
+	.WKeditor_plugin button:hover{
+		background: #141414;
 	}
 
 	
@@ -147,7 +152,7 @@
 	}
 
 
-/* 插件 图标按钮样式放置位置 */
+/* 插件 图标按钮样式放置位置 
 .WKeditor_plugin .image{
 	background: url(http://img04.taobaocdn.com/tps/i4/T1.AJiFj8dXXXBqKDv-150-117.png);
 	background-position: -61px -74px;
@@ -156,3 +161,4 @@
 	background: url(http://img04.taobaocdn.com/tps/i4/T1.AJiFj8dXXXBqKDv-150-117.png);
 	background-position: -61px -44px
 }
+*/
