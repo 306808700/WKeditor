@@ -25,6 +25,8 @@ WKeditor是一款非常简洁且新颖的富文本编辑器，目前在玩客项
 * 五种文字格式排版，当然还可以根据需求自由添加多个。
 * 支持粘帖图片，以及QQ截图的粘帖，不过需要高级浏览器。
 * 粘帖内容过滤。
+* 提供视频、图片、模版 三种插入板功能，当然同样的可根据使用场景自由添加或减少。
+* 详见自定义扩展
 
 ## 配置过滤器
     
@@ -52,7 +54,7 @@ WKeditor是一款非常简洁且新颖的富文本编辑器，目前在玩客项
     
     // @设置红色
     // 你可以通过.ForeColor 设置样式
-    Editor.addFont({name:"ForeColor",title:"文本颜色",value:"红",command:"ForeColor"},function(e){
+    Editor.addFont({name:"ForeColor",title:"文本颜色",value:"红"},function(e){
           document.execCommand('ForeColor',false,'red');
     });
 

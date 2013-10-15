@@ -40,8 +40,8 @@
 		max-width: 98%;
 	}
 	.WKeditor_plugin{
-		position: fixed;
-		top: 150px;
+		position: absolute;
+		top: 50px;
 		margin-left: -60px;
 		background: #333;
 		width: 27px;
