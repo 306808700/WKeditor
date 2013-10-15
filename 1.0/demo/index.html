@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8"/>
-    <title>WKeditor 1.0</title>
+    <title>WKeditor 1.1</title>
     <script src="http://g.tbcdn.cn/kissy/k/1.3.0/kissy-min.js" charset="utf-8"></script>
     <link rel="stylesheet" href="http://g.tbcdn.cn/kissy/k/1.3.0/css/dpl/base-min.css">
     <link rel="stylesheet" href="../index.css">
@@ -42,14 +42,17 @@
     .top .bb{
         width:800px;margin:auto
     }
-    .my{
-        font-size: 18px;
+    #WKeditor .ForeColor{
+        background: #333;
         font-weight: bold;
+    }
+    #WKeditor .ForeColor:hover{
+        background: #141414;
     }
 </style>
 
 <h2 class="top">
-    <div class="bb">WKeditor 1.0</div>
+    <div class="bb">WKeditor 1.1</div>
 </h2>
 
 <div id="wankePost">
@@ -111,12 +114,18 @@
         }
         var Editor = new WKeditor(options);
         Editor.init();
-        console.log(Editor);
 
+
+        /*
+            自定义字体
+        */
+        Editor.addFont({name:"ForeColor",title:"文本颜色",value:"红",command:"ForeColor"},function(e){
+              document.execCommand('ForeColor',false,'red');
+        });
         /*
             官方插件
         */
-        Editor.plug({name:"video",title:"插入视频"},function(){
+        Editor.plug({name:"video",title:"插入视频",value:"视"},function(){
             var self = this;
             KISSY.use("WKvideo,WKvideo.css",function(S,WKvideo){
                 var config = {
@@ -132,7 +141,7 @@
         /*
             官方插件
         */
-        Editor.plug({name:"image",title:"插入图片"},function(){
+        Editor.plug({name:"image",title:"插入图片",value:"图 "},function(){
             var self = this;
             KISSY.use("WKimage,WKimage.css",function(S,WKimage){
                 var config = {
@@ -148,10 +157,11 @@
         /*
             自定义插件
         */
-        Editor.plug({name:"my",title:"我还没有名字",value:"模"},function(){
+        Editor.plug({name:"my",title:"自定义模版",value:"模"},function(){
             var self = this;
             self.$wrap.fire("click");
             self.tool.insert(S.one("<div><b><font size='4'>模版</font></b><p>自定义模版</p></div>")[0],self.tool.getRange());
+            
         });
     });
     

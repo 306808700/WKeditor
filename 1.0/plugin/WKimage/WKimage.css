@@ -37,7 +37,7 @@
 		left: 0;
 	}
 
-	.WKeditor_image_plate .btn-confirm ,.WKeditor_video_plate .btn-confirm{
+	.WKeditor_image_plate .btn-confirm {
 	    display: none;
 	    width: 90px;
 	    height: 45px;

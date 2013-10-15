@@ -21,7 +21,10 @@ WKeditor是一款非常简洁且新颖的富文本编辑器，目前在玩客项
 * @message {String} 输入提示
 * @font {Array} 文本操作按钮，默认提供以上列出的5种。
 
-
+## 基本功能
+* 五种文字格式排版，当然还可以根据需求自由添加多个。
+* 支持粘帖图片，以及QQ截图的粘帖，不过需要高级浏览器。
+* 粘帖内容过滤。
 
 ## 配置过滤器
     
@@ -32,13 +35,22 @@ WKeditor是一款非常简洁且新颖的富文本编辑器，目前在玩客项
 * 当你粘帖web word text 或者其他软件的文本进编辑器时候。
 * 不在配置里面的标签将会自动过滤删除
 
-## 插件调用
+## 插件
 
     Editor.plug(object function);
 
 * @param {object} 会根据name、title、value 生成一个button 按钮
 * @param {function} 按钮点击触发所执行的函数
 
+## 自定义文本格式命令
+    
+    // @设置红色
+    // 你可以通过.ForeColor 设置样式
+    Editor.addFont({name:"ForeColor",title:"文本颜色",value:"红",command:"ForeColor"},function(e){
+          document.execCommand('ForeColor',false,'red');
+    });
+
+*你可以自定义多个文本格式命令，以符合自身项目需求。
 
 ## 自定义插件
     
@@ -47,6 +59,8 @@ WKeditor是一款非常简洁且新颖的富文本编辑器，目前在玩客项
         // console.log(Editor);
     });
 
+*你可以自定义多个插件，以符合自身项目需求。
+
 ##  官方插件【图片上传】
 
     Editor.plug({name:"image",text:"插入图片"},function(){
@@ -54,13 +68,18 @@ WKeditor是一款非常简洁且新颖的富文本编辑器，目前在玩客项
         KISSY.use("WKimage,WKimage.css",function(S,WKimage){
             var config = {
                 action:"upload.php",
-                allowExts:"jpg,gif,png,jpeg"
-                //dragSort:true
+                allowExts:"jpg,gif,png,jpeg",
+                //multiple:true,
             };
             self.WKimage = new WKimage(self.options);
             self.WKimage.init(config);
         });
     });
+
+* action 后端接口地址
+* allowExts 允许的格式
+* multiple 默认多选
+* dragSort 默认可以对预览图拖拽排序
 
 
 ##  官方插件【视频插入】
@@ -82,13 +101,13 @@ WKeditor是一款非常简洁且新颖的富文本编辑器，目前在玩客项
         });
     });
 
-
+* setUrl 通过这个函数可以与后端通讯得到正确的地址返回， 注：需要同步执行。
 
 
 ## 接口
 
 * 获取光标位置 Editor.tool.getRange();
-* 光标位置插入 Editor.tool.inser(dom,range); // range 参数可以为空表示当前焦点位置;
+* 光标位置插入 Editor.tool.insert(dom,range); // range 参数可以为空表示当前焦点位置;
 * 更多接口可以console.log(Editor)  查看
 
 ## 外观皮肤【style】
@@ -98,3 +117,7 @@ WKeditor是一款非常简洁且新颖的富文本编辑器，目前在玩客项
 * .WKeditor_image_plate 插入图片功能板
 * .WKeditor_font_plate 文本格式按钮功能板
 * .WKeditor_video_plate 插入视频功能板
+
+
+## 更多功能需求，请在github 提问，或者直接旺旺【核心】。
+* 
