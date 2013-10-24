@@ -1,7 +1,7 @@
 /*
 combined files : 
 
-WKeditor/1.0/index
+gallery/WKeditor/1.0/index
 
 */
 /*
@@ -16,14 +16,13 @@ gallery/WKeditor/1.0/index
  * @module WKeditor
  **/
 
-KISSY.add('WKeditor/1.0/index',function (S, Node,XTemplate,WKfont) {
+KISSY.add('gallery/WKeditor/1.0/index',function (S, Node,XTemplate,WKfont) {
     var EMPTY = '';
     var $ = Node.all;
     /**
      * @class WKeditor
      */
     function WKeditor(options) {
-
         var self = this;
         self.options = options;
     }
@@ -644,7 +643,7 @@ KISSY.add('WKeditor/1.0/index',function (S, Node,XTemplate,WKfont) {
         };
     }
     WKeditor.prototype.init = function(){
-        this.ele = this.options.ele;
+        this.ele = $(this.options.ele);
         this.left = this.options.left  = this.ele.offset().left;
         this.top = this.options.top  = this.ele.offset().top;
         this.tool = this.options.tool  = this.tool();
