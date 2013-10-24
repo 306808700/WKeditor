@@ -200,4 +200,4 @@ KISSY.add(function (S, Node,XTemplate) {
         this.event();
     };
     return WKfont;
-}, {requires:['node','xtemplate','WKfont.css']});
+}, {requires:['node','xtemplate','gallery/WKeditor/1.0/plugin/WKfont/WKfont.css']});

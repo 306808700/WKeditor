@@ -90,48 +90,31 @@
 </div>
 <div class="copyright">14707 @核心</div>
 <script>
+/*
+    自定义方法
+*/
+Function.prototype.init = function(){
+    this.init();
+}
+
+
     
     var S = KISSY;
-    S.Config.debug = true;
+    //S.Config.debug = true;
     if (S.Config.debug) {
         var srcPath = "../../../";
         S.config({
             packages:[
                 {
-                    name:"WKeditor",
-                    path:"../../",
-                    charset:"utf-8",
-                    ignorePackageNameInUri:true
-                },
-                {
-                    name:"pixeler",
-                    path:"./",
-                    charset:"utf-8",
-                    ignorePackageNameInUri:true
-                },
-                {
-                    name:"WKfont",
-                    path:"../plugin/WKfont/WKfont",
-                    charset:"utf-8",
-                    ignorePackageNameInUri:true
-                },
-                {
-                    name:"WKimage",
-                    path:"../plugin/WKimage/WKimage",
-                    charset:"utf-8",
-                    ignorePackageNameInUri:true
-                },
-                {
-                    name:"WKvideo",
-                    path:"../plugin/WKvideo/WKvideo",
+                    name:"gallery",
+                    path:"../../../",
                     charset:"utf-8",
                     ignorePackageNameInUri:true
                 }
             ]
         });
     }
-
-    S.use('WKeditor/1.0/index,', function (S, WKeditor) {
+    S.use('gallery/WKeditor/1.0/index,', function (S, WKeditor) {
         var options = {
             message:'<div class="WKeditor_message"><h3>请输入正文</h3><p>小提示：<br>\
                 1. 鼠标选中已输入文字可修改文字样式。<br>\
@@ -140,9 +123,10 @@
             font:[
                 "normalFont","largeFont","hugeFont","strongFont","listText"
             ],
-            ele:S.one("#WKeditor")
+            ele:"#WKeditor"
         }
         var Editor = new WKeditor(options);
+        console.log(Editor);
         Editor.init();
 
 
@@ -186,7 +170,7 @@
         */
         Editor.plug({name:"video",title:"插入视频",value:"视"},function(){
             var self = this;
-            KISSY.use("WKvideo,WKvideo.css",function(S,WKvideo){
+            KISSY.use("gallery/WKeditor/1.0/plugin/WKvideo/WKvideo,gallery/WKeditor/1.0/plugin/WKvideo/WKvideo.css",function(S,WKvideo){
                 var config = {
                     setUrl:function(url){
                         // 你可以通过这个方法设置正确的链接。
@@ -202,7 +186,7 @@
         */
         Editor.plug({name:"image",title:"插入图片",value:"图 "},function(){
             var self = this;
-            KISSY.use("WKimage,WKimage.css",function(S,WKimage){
+            KISSY.use("gallery/WKeditor/1.0/plugin/WKimage/WKimage,gallery/WKeditor/1.0/plugin/WKimage/WKimage.css",function(S,WKimage){
                 var config = {
                     action:"upload.php",
                     allowExts:"jpg,gif,png,jpeg"
