@@ -44,7 +44,10 @@ module.exports = function(grunt) {
             },
             base: {
                 files: {
-                    '<%= pkg.version %>/build/index-min.js': ['<%= pkg.version %>/build/index.js']
+                    '<%= pkg.version %>/build/index-min.js': ['<%= pkg.version %>/build/index.js'],
+                    '<%= pkg.version %>/plugin/WKfont/WKfont-min.js': ['<%= pkg.version %>/plugin/WKfont/WKfont.js'],
+                    '<%= pkg.version %>/plugin/WKimage/WKimage-min.js': ['<%= pkg.version %>/plugin/WKimage/WKimage.js'],
+                    '<%= pkg.version %>/plugin/WKvideo/WKvideo-min.js': ['<%= pkg.version %>/plugin/WKvideo/WKvideo.js']
                 }
             }
         },

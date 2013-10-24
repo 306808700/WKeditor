@@ -652,4 +652,4 @@ KISSY.add('gallery/WKeditor/1.0/index',function (S, Node,XTemplate,WKfont) {
         this.browser = this.tool.browser();
     }
     return WKeditor;
-}, {requires:['node','xtemplate','gallery/WKeditor/1.0/plugin/WKfont/WKfont']});
+}, {requires:['node','xtemplate','gallery/WKeditor/1.0/index.css','gallery/WKeditor/1.0/plugin/WKfont/WKfont']});
