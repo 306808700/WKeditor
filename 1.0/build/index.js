@@ -5,7 +5,7 @@ gallery/WKeditor/1.0/plugin/WKfont/WKfont
 gallery/WKeditor/1.0/index
 
 */
-KISSY.add('gallery/WKeditor/1.0/index',function (S, Node,XTemplate) {
+KISSY.add('gallery/WKeditor/1.0/plugin/WKfont/WKfont',function (S, Node,XTemplate) {
     var EMPTY = '';
     var $ = Node.all;
     /**
@@ -207,7 +207,7 @@ KISSY.add('gallery/WKeditor/1.0/index',function (S, Node,XTemplate) {
         this.event();
     };
     return WKfont;
-}, {requires:['node','xtemplate','gallery/gallery/WKeditor/1.0/plugin/WKfont/WKfont.css']});
+}, {requires:['node','xtemplate','./WKfont.css']});
 /*
 combined files : 
 
@@ -862,4 +862,4 @@ KISSY.add('gallery/WKeditor/1.0/index',function (S, Node,XTemplate,WKfont) {
         this.browser = this.tool.browser();
     }
     return WKeditor;
-}, {requires:['node','xtemplate','gallery/WKeditor/1.0/index.css','gallery/WKeditor/1.0/plugin/WKfont/WKfont']});
+}, {requires:['node','xtemplate','./plugin/WKfont/WKfont','./index.css']});

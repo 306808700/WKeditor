@@ -113,4 +113,4 @@ KISSY.add(function (S, Node,Base) {
         this.event();
     };
     return WKvideo;
-}, {requires:['node','gallery/WKeditor/1.0/plugin/WKvideo/WKvideo.css']});
+}, {requires:['node','./WKvideo.css']});
