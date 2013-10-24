@@ -22,6 +22,7 @@ KISSY.add('gallery/WKeditor/1.0/index',function (S, Node,XTemplate,WKfont) {
     /**
      * @class WKeditor
      */
+
     function WKeditor(options) {
         var self = this;
         self.options = options;
@@ -644,6 +645,7 @@ KISSY.add('gallery/WKeditor/1.0/index',function (S, Node,XTemplate,WKfont) {
     }
     WKeditor.prototype.init = function(){
         this.ele = $(this.options.ele);
+        this.options.ele = this.ele;
         this.left = this.options.left  = this.ele.offset().left;
         this.top = this.options.top  = this.ele.offset().top;
         this.tool = this.options.tool  = this.tool();
@@ -656,4 +658,4 @@ KISSY.add('gallery/WKeditor/1.0/index',function (S, Node,XTemplate,WKfont) {
         this.browser = this.tool.browser();
     }
     return WKeditor;
-}, {requires:['node','xtemplate','WKfont']});
+}, {requires:['node','xtemplate','gallery/gallery/WKeditor/1.0/plugin/WKfont/WKfont']});
