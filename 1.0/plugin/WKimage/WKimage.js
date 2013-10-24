@@ -437,4 +437,4 @@ KISSY.add(function (S, Node,Base) {
         this.event();
     };
     return WKimage;
-}, {requires:['node','gallery/WKeditor/1.0/plugin/WKimage/WKimage.css']});
+}, {requires:['node','./WKimage.css']});
