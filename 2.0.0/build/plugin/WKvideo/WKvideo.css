@@ -1,0 +1,41 @@
+.WKeditor_video_plate{
+		position: absolute;
+		background-color:#f8f8f8;
+		padding: 50px 0px 50px 0px;
+		letter-spacing: 1px;
+		font-size: 14px;
+		display: none;
+	}
+
+	.WKeditor_video_plate .btn-confirm{
+		display: block;
+		float: left;
+		margin-left:5px;
+		width: 70px;
+		padding:0px 20px;
+
+	}
+	.WKeditor_video_plate input{
+	    width:90%;
+	    height: 40px;
+	    float: right;
+	    border:1px solid #EBEBEB;
+	    color:#999;
+	    font-size:14px;
+	    padding:0 12px;
+	    margin-left: 20px;
+	    line-height: 40px;
+	} 
+	.WKeditor_video_plate table{
+		width: 100%;
+	}
+	.WKeditor_video_plate .close{
+		position: absolute;
+		right: 5px; 
+		top: 5px; 
+		font-size: 20px; 
+		height: 20px; 
+		line-height: 20px; 
+		cursor: pointer; 
+		width: 20px;
+	}
