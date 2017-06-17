@@ -1,0 +1,208 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>WKeditor 1.2</title>
+    <script src="http://g.tbcdn.cn/kissy/k/1.3.0/kissy-min.js" charset="utf-8"></script>
+    <link rel="stylesheet" href="http://g.tbcdn.cn/kissy/k/1.3.0/css/dpl/base-min.css">
+<script>var S = KISSY;S.config({packages:[{name:"kg",path:"http://g.tbcdn.cn/kg/",charset:"utf-8",ignorePackageNameInUri:true}]});if (S.Config.debug){var srcPath = "../";S.config({packages:[{name:"kg/wkeditor/2.0.0",path:srcPath,charset:"utf-8",ignorePackageNameInUri:true}]});}</script></head>
+<body>
+<style type="text/css">
+    body{
+        background: #eee;
+        font:12px/1.5 "微软雅黑";
+    }
+    #wankePost {
+        width: 60%;
+        margin: auto;
+        background: #fff;
+        padding: 10px;
+        border-radius: 5px;
+    }
+    .title{
+        font-size: 24px;
+        color: #666;
+        padding: 10px 10px 10px 20px;
+        border-bottom: 1px solid #eee;
+
+    }
+    .copyright{
+        width: 800px;
+        margin: auto;
+        border-top: 1px solid #ccc;
+        padding: 20px;
+        margin-top: 50px;
+        text-align: center;
+
+    }
+    .top{
+        background:#336699;padding:20px;color:#fff;
+    }
+    .top .bb{
+        width:800px;margin:auto
+    }
+    #WKeditor .ForeColor{
+        background: #333;
+        font-weight: bold;
+    }
+    #WKeditor .ForeColor:hover{
+        background: #141414;
+    }
+    .list_color{
+        height: 0px;
+        box-shadow: 0px 2px 3px #333;
+    }
+    .list_color button{
+        width: 32px;
+        height: 32px;
+        float: left;
+    }
+    .list_color button:hover{
+        background: #141414;
+    }
+    .config{
+        width: 800px;
+        margin: auto;
+        background: #ccc;
+        margin-bottom: 20px;
+    }
+    .config label{
+        margin-right: 10px;
+    }
+    .link{
+        float: right;
+        color: #ccc;
+    }
+    .link:hover{
+        color: #fff;
+    }
+</style>
+
+<h2 class="top">
+    <div class="bb">WKeditor 1.2 <a class="link" href="http://kg.kissyui.com/WKeditor/2.0.0/guide/index.html" target="_blank">API：http://kg.kissyui.com/WKeditor/2.0.0/guide/index.html</a></div>
+
+</h2>
+
+<div id="wankePost">
+    <div class='title'>标题</div>    
+    <div id="WKeditor"></div>
+</div>
+<div class="copyright">14707 @核心</div>
+<script>
+    var S = KISSY;
+    /*
+    
+    S.Config.debug = true;
+    if (S.Config.debug) {
+        var srcPath = "../../../";
+        S.config({
+            packages:[
+                {
+                    name:"gallery-back",
+                    path:"../../../",
+                    charset:"utf-8",
+                    ignorePackageNameInUri:true
+                }
+            ]
+        });
+    }
+    */
+    S.use('kg/WKeditor/2.0.0/index', function (S, WKeditor) {
+        var options = {
+            message:'<div class="WKeditor_message"><h3>请输入正文</h3><p>小提示：<br>\
+                1. 鼠标选中已输入文字可修改文字样式。<br>\
+                2. 支持粘帖截图。<br>\
+                3. 移动到未居中的图片上出现居中按钮。<br></div>',
+            font:[
+                "normalFont","largeFont","hugeFont","strongFont","listText"
+            ],
+            ele:"#WKeditor"
+        }
+        var Editor = new WKeditor(options);
+        console.log(Editor);
+        Editor.init();
+
+
+        /*
+            自定义字体
+        */
+        Editor.addFont({name:"ForeColor",title:"文本颜色",value:"色",command:"ForeColor"},function(e){
+            var $ = S.one;
+            if($(".list_color")){
+                $(".list_color").remove();
+                return;
+            }
+            var that = $(e.target);
+            var $list = $("<div class='list_color'><button color='#333'>黑</button><button color='red'>红</button><button color='blue'>蓝</button></div>");
+            var set = function(color){
+                document.execCommand('ForeColor',false,color);
+            };
+            var buttons = $list.all("button");
+            /*
+            S.each(buttons,function(dom){
+                var color = $(dom).attr('color');
+                $(dom).css("background",color);
+            });
+            */ 
+            $list.css({
+                position:"absolute",
+                top:that.offset().top-that.parent().parent().offset().top+30,
+                left:that.offset().left-that.parent().parent().offset().left
+            });
+            $list.animate({
+                height:buttons.length*32
+            },1/4);
+            buttons.on("click",function(){
+                set($(this).attr("color"));
+                $list.remove();
+            });
+            that.parent().append($list);
+        });
+        /*
+            官方插件
+        */
+        Editor.plug({name:"video",title:"插入视频",value:"视"},function(){
+            var self = this;
+            KISSY.use("kg/WKeditor/2.0.0/plugin/WKvideo/WKvideo,kg/WKeditor/2.0.0/plugin/WKvideo/WKvideo.css",function(S,WKvideo){
+                var config = {
+                    setUrl:function(url){
+                        // 你可以通过这个方法设置正确的链接。
+                        return url;
+                    }
+                };
+                self.WKvideo = new WKvideo(self.options);
+                self.WKvideo.init(config);
+            });
+        });
+        /*
+            官方插件
+        */
+        Editor.plug({name:"image",title:"插入图片",value:"图 "},function(){
+            var self = this;
+            KISSY.use("kg/WKeditor/2.0.0/plugin/WKimage/WKimage,kg/WKeditor/2.0.0/plugin/WKimage/WKimage.css",function(S,WKimage){
+                var config = {
+                    action:"upload.php",
+                    allowExts:"jpg,gif,png,jpeg"
+                    //dragSort:true
+                };
+                self.WKimage = new WKimage(self.options);
+                self.WKimage.init(config);
+            });
+        });
+
+        /*
+            自定义插件
+        */
+        Editor.plug({name:"my",title:"自定义模版",value:"模"},function(){
+            var self = this;
+            self.$wrap.fire("click");
+            self.tool.insert(S.one("<div><b><font size='4'>模版</font></b><p>自定义模版</p></div>")[0],self.tool.getRange());
+            
+        });
+    });
+    
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,61 @@
+.WKeditor_font_plate{
+		position: absolute;
+		display: none;
+	}
+	.WKeditor_font_plate .box{
+		border-radius: 2px;
+	    background-color: #333;
+	    height: 32px;
+	    float:left;
+	    -webkit-box-shadow: #666 0px 2px 4px;
+	    -moz-box-shadow: #666 0px 2px 4px;
+	    box-shadow: #666 0px 2px 4px;
+	}
+	.WKeditor_font_plate button{
+		background: #333;
+		font-size: 16px;
+		color: #fff;
+		border: 0;
+		font-family: "微软雅黑";
+
+	}
+	.WKeditor_font_plate .command {
+		width: 32px;
+		height: 32px;
+		cursor: pointer;
+		border-radius: 2px;
+		border-right: 1px solid #2b2b2b;
+		border: 0;
+		background-color: #333;
+		display: inline-block;
+		background: url(http://img03.taobaocdn.com/tps/i3/T1zHRHXCdhXXaw4i2e-160-37.gif)
+	}
+	.WKeditor_font_plate .command:hover{
+	    background-color: #141414;
+	}
+	.WKeditor_font_plate .command.hugeFont{
+	    background-position: 0 -4px;
+	}
+	.WKeditor_font_plate .command.largeFont{
+	    background-position: -32px -4px;
+	}
+	.WKeditor_font_plate .command.normalFont{
+	    background-position: -64px -4px;
+	}
+	.WKeditor_font_plate .command.strongFont{
+	    background-position: -96px -4px;
+	}
+	.WKeditor_font_plate .command.listText{
+	    background-position: -128px -4px;
+	}
+	.WKeditor_font_plate .arrow{
+	    width:9px;
+	    height:5px;
+	    overflow: hidden;
+	    position: absolute;
+	    bottom: -5px;
+	    left:50%;
+	    margin-left:-5px;
+	    background: url(http://img03.taobaocdn.com/tps/i3/T1zHRHXCdhXXaw4i2e-160-37.gif);
+	    zoom:1;
+	}
